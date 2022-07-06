@@ -1,8 +1,8 @@
 NAME = ft_containers
 
-SRCS =	main.cpp
+SRCS =	map_2-3_test.cpp
 
-HDRS = vector.hpp
+HDRS = vector.hpp utils.hpp vector_iterator.hpp
 
 OBJS = $(SRCS:.cpp=.o)
 
