@@ -145,7 +145,7 @@ namespace ft{
                     ptr->val = ptr->left->val;
                     deleteLeafNode(ptr->left);
                     ptr->left = createNullNode(ptr->left);
-                    balanceDelete(ptr);
+//                    balanceDelete(ptr);
                     // deleting leaf node
                 } else if (!ptr->right->key && !ptr->left->key) {
                     cout << "erase: no left leaf & no right leaf \n";
@@ -334,33 +334,55 @@ namespace ft{
                     cout << "\n!this is root -> done "  << "\n";
                     return;
                 }
-                cout << "balance delete: balance at " << parent->key << " ";
-                if (!parent->left->key && !parent->right->key) {
+                cout << "balance delete: balance at " << reinterpret_cast<long >((deleted)) << " ";
+                if (parent->left && parent->right && parent->left->key && parent->right->key) {
+                    cout << "ok" << "\n";
+                    return;
+                }
+                if (parent->left && parent->right && !parent->left->key && !parent->right->key) {
                     cout << "no leaf nodes -> done "  << "\n";
                     return;
                 }
-                if (parent->left->key && parent->left->color) {
-                    // case 1.1: left Red   - share
-                    cout << "left is RED -> share " << parent->key << "\n";
-                    turnRight(parent);
-                    parent->left->color = 1;
-                    if(parent->parent)
-                    {
-                        parent->parent->color = 0;
-                        parent->parent->left->color = 0;
-                    }
-                    return;
-                }
-                if (parent->left->key || parent->right->key) {
-                    cout << "- right is deleted- left is black -> merge\n";
-                    join(parent);
-                    balanceDelete(parent);
-    //                     case 1.2: left Black - merge
-                    return;
-                }
+//              cases
+
+                // 1
+                // 2
+                // 3
+                    // 31
+                    // 32
+                // 4
+                    // 41
+                    // 42
+
+
+//                if (parent->left && parent->left->left && parent->left->left->key && parent->left->left->color) {
+//                    // case 1.1: left Red   - share
+//                    cout << "left is RED -> share " << parent->left->key << "\n";
+//                    turnRight(parent);
+//                    parent->left->color = 1;
+//                    if(parent->parent)
+//                    {
+//                        parent->parent->color = 0;
+//                        parent->parent->left->color = 0;
+//                    }
+//                    return;
+//                }
+//                if (parent->left && parent->right && (parent->left->key || parent->right->key)) {
+//                    cout << "- right is deleted- left is black -> merge\n";
+//                    node* next = join(deleted);
+//                    if(next)
+//                        balanceDelete(next);
+//    //                     case 1.2: left Black - merge
+//                    return;
+//                }
             }
-            void    join(node* emptyNode){
-                node* a,b,c,d,newEmpty,grandParent,new3black,new3red;
+            node*    join(node* emptyNode){ // TODO free deleted node;
+                node* a;
+                node* b;
+                node* c;
+                node* d;
+                node* x;
+                node* y;
                 short type = 2;
                 // my sibling left or right?
                 if(emptyNode->parent->left && emptyNode->parent->left == emptyNode) {
@@ -374,14 +396,129 @@ namespace ft{
                 switch (type) {
                     // empty is right
                     case 1: {
-                        printf("\nempty:%llu|gp:%llu|a:%llu|b:%llu|c:%llu|d:%llu|\n",emptyNode,emptyNode->parent,emptyNode->parent->left->left,emptyNode->parent->left->right,emptyNode->left,emptyNode->right);
-                        break;
+//                        std::cout << "before join:\n";
+//                        print(1, _root);
+                        std::cout << "\n";
+                        printf("\na:%llu|b:%llu|c:%llu|d:%llu|x:%llu|y:%llu|empty:%llu\n",emptyNode->parent->left->left,emptyNode->parent->left->right,emptyNode->left,emptyNode->parent->parent,emptyNode->parent->left,emptyNode->parent,emptyNode);
+                        a = emptyNode->parent->left->left;
+                        b = emptyNode->parent->left->right;
+                        c = emptyNode->left;
+                        d = emptyNode->parent->parent;
+                        x = emptyNode->parent->left;
+                        y = emptyNode->parent;
+                        if(d) {
+                            if(d->key < y->key)
+                                d->right = emptyNode;
+                            else
+                                d->left = emptyNode;
+                            emptyNode->parent = d;
+                            emptyNode->left = y;
+                            emptyNode->right = NULL;
+                            emptyNode->color = 0;
+
+                            y->parent = emptyNode;
+                            y->left = x;
+                            if(c) {
+                                y->right = c;
+                                c->parent = y;
+                            } else
+                                y->right = createNullNode(y);
+                            y->color = 0;
+
+                            x->parent = y;
+                            x->left = a;
+                            x->right = b;
+                            x->color = 1;
+
+                            a->parent = x;
+                            b->parent = x;
+                            std::cout << "after join:\n";
+                            print(1, _root);
+                            return y->parent;
+                        } else {
+                            x->color = 1;
+                            if(c) {
+                                y->right = c;
+                                c->parent = y;
+                            } else
+                                y->right = createNullNode(y);
+                            _root = y;
+                            y->parent = NULL;
+                            std::cout << "after join:\n";
+                            print(1, _root);
+                            return y->parent;
+                        }
                     }
                     // empty is left
                     case 0: {
-                        break;
+//                        std::cout << "before join:\n";
+//                        print(1, _root);
+                        std::cout << "\n";
+                        printf("\na:%llu|b:%llu|c:%llu|d:%llu|x:%llu|y:%llu|empty:%llu\n",emptyNode->parent->right->left,emptyNode->parent->right->right,emptyNode->left,emptyNode->parent->parent,emptyNode->parent,emptyNode->parent->right,emptyNode);
+                        a = emptyNode->parent->right->left;
+                        b = emptyNode->parent->right->right;
+                        c = emptyNode->left;
+                        d = emptyNode->parent->parent;
+                        y = emptyNode->parent->right;
+                        x = emptyNode->parent;
+                        if(d) {
+                            if (!x->color) {
+                                if (d->key < y->key)
+                                    d->right = emptyNode;
+                                else
+                                    d->left = emptyNode;
+                                emptyNode->parent = d;
+                                emptyNode->left = y;
+                                emptyNode->right = NULL;
+                                emptyNode->color = 0;
+
+                                y->parent = emptyNode;
+                            } else {
+                                if (d->key < y->key)
+                                    d->right = y;
+                                else
+                                    d->left = y;
+                                y->parent = d;
+                            }
+                            y->left = x;
+                            if(c) {
+                                x->left = c;
+                                c->parent = x;
+                            } else
+                                x->left = createNullNode(x);
+                            y->color = 0;
+
+                            x->parent = y;
+                            y->right = b;
+                            x->right = a;
+                            x->color = 1;
+
+                            a->parent = x;
+                            b->parent = x;
+                           std::cout << "after join:\n";
+                            print(1, _root);
+                            std::cout << "\n";
+                            return y->parent;
+                        } else {
+                            x->color = 1;
+                            x->left = c;
+                            c->parent = x;
+
+                            x->right = a;
+                            a->parent = x;
+
+                            _root = y;
+                            y->parent = NULL;
+                            y->left = x;
+                            y->color = 0;
+                            x->parent = y;
+
+                            std::cout << "after join:\n";
+                            print(1, _root);
+                            return y->parent;
+                        }
                     }
-                    default: return;
+                    default: return NULL;
                 }
             };
     };
@@ -403,29 +540,24 @@ int main(int argc, char** argv)
     map.append(6,99);
     map.append(7,99);
     map.append(8,99);
-//    map.append(9,99);
-//    map.append(10,99);
-//    map.append(11,99);
-//    map.append(12,99);
-//    map.append(13,99);
-//    map.append(14,99);
-//    map.append(15,99);
-//    map.append(16,99);
-//    map.append(24,99);
-//    map.print(1,map.getRoot());
-//    map.append(50,99);
-//    map.print(1,map.getRoot());
-//    map.append(11,99);
-//    map.print(1,map.getRoot());
-//    map.append(10,99);
-//    map.append(9,99);
-//    map.append(8,99);
-//    map.erase(13);
-//    map.erase(6);
-//    map.print(1,map.getRoot());
-    map.erase(7);
+    map.append(9,99);
+    map.append(10,99);
+    map.append(11,99);
+    map.append(12,99);
+    map.append(13,99);
+    map.append(14,99);
+    map.append(15,99);
+    map.append(16,99);
+    map.append(24,99);
     map.print(1,map.getRoot());
-    map.erase(8);
+    map.erase(13);
+    map.erase(3);
+    map.erase(15);
+//    map.print(1,map.getRoot());
+    map.erase(10);
+//    map.erase(7);
+    cout << "\n";
+    map.print(1,map.getRoot());
     return 0;
 }
 
