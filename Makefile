@@ -1,6 +1,6 @@
 NAME = ft_containers
 
-SRCS =	map_2-3_test.cpp
+SRCS =	map_red_black_tree.cpp
 
 HDRS = vector.hpp utils.hpp vector_iterator.hpp
 

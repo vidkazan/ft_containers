@@ -20,19 +20,6 @@ struct foo{
     long long l;
 };
 
-//int main() {
-//    struct foo f;
-//    f.str = "90";
-//    f.n = 90;
-//    f.l = 9;
-//    ft::vector<struct foo> bar(201,f);
-//    bar.pop_back();
-//    std::cout << "| size: " << bar.size() << " | capacity: " << bar.capacity() << " |\n";
-//    return 0;
-//}
-
-#include <stdlib.h>
-
 #define MAX_RAM 4294967296
 #define BUFFER_SIZE 4096
 struct Buffer
