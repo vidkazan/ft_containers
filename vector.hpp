@@ -24,29 +24,30 @@ namespace ft
         typedef typename iterator_traits<iterator>::difference_type		difference_type;
         typedef typename allocator_type::size_type						size_type;
 
-///CONSTRUCTORS///
-//default constructor
+///CONSTRUCTORS
+
+///default constructor
         explicit vector (const allocator_type& alloc = allocator_type());
 
-//fill constructor
+///fill constructor
         explicit vector (size_type n, const value_type& val = value_type(),
                          const allocator_type& alloc = allocator_type());
 
-//range constructor
+///range constructor
         template <class InputIterator>
         vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
                 typename enable_if<!is_integral<InputIterator>::value>::type* = NULL);
 
-//copy constructor
+///copy constructor
         vector (const vector& x);
 
-//assignment operator
+///assignment operator
         vector &operator=(const vector& x);
 
-//destructor
+///destructor
         ~vector(void);
 
-///ITERATORS///
+///ITERATORS
         iterator				begin(void);
         const_iterator			begin(void) const;
         iterator				end(void);
@@ -56,7 +57,7 @@ namespace ft
         reverse_iterator		rend(void);
         const_reverse_iterator	rend(void) const;
 
-///CAPACITY///
+///CAPACITY
         size_type				size(void) const;
         size_type				max_size(void) const;
         void					resize (size_type n, value_type val = value_type());
@@ -64,7 +65,7 @@ namespace ft
         bool					empty(void) const;
         void					reserve (size_type n);
 
-///ELEMENT_ACCESS///
+///ELEMENT_ACCESS
         reference				operator[](size_type n);
         const_reference			operator[](size_type n) const;
         reference				at(size_type n);
@@ -76,7 +77,7 @@ namespace ft
         value_type*				data(void);
         const value_type*		data(void) const;
 
-///MODIFIERS///
+///MODIFIERS
         template <class InputIterator>
         void					assign(InputIterator first, InputIterator last, typename enable_if<!is_integral<InputIterator>::value>::type* = NULL);
         void					assign(size_type n, const value_type& val);
@@ -91,10 +92,10 @@ namespace ft
         void					swap(vector &x);
         void					clear(void);
 
-///ALLOCATOR///
+///ALLOCATOR
         allocator_type			get_allocator(void) const;
 
-///MISCELANIOUS///
+///MISC
     private:
         size_type				adjust_capacity(size_type n = 0);
 
