@@ -33,21 +33,35 @@ int main(void)
 	
 	{
 		test_name("Testing the range constructor");
+        std::vector<int>::iterator itx;
+        std::vector<int>::iterator itx2;
+        std::vector<int> numbersx(6,33);
 		ft::vector<int>::iterator it;
 		ft::vector<int>::iterator it2;
 		ft::vector<int> numbers(6, 33);
-		numbers[0] = 23;
-		numbers[1] = 14;
-		numbers[2] = 51;
+        numbersx[0] = 0;
+        numbersx[1] = 1;
+        numbersx[2] = 2;
+        numbersx[3] = 3;
+        numbersx[4] = 4;
+
+		numbers[0] = 0;
+		numbers[1] = 1;
+		numbers[2] = 2;
+        numbers[3] = 3;
+        numbers[4] = 4;
+        itx = numbersx.begin();
+        itx2 = numbersx.end();
 		it = numbers.begin();
 		it2 = numbers.end();
 		ft::vector<int> numbers2(it, it2);
-		assert(6 == numbers2.capacity());
-		assert(23 == *(numbers2.begin()));
-		assert(14 == *(numbers2.begin() + 1));
-		assert(51 == *(numbers2.begin() + 2));
-		assert(33 == *(numbers2.begin() + 3));
-		assert(33 == *(numbers2.begin() + 4));
+		std::vector<int> numbersx2(itx,itx2);
+        assert(numbersx2.capacity() == numbers2.capacity());
+		assert(0 == *(numbers2.begin()));
+		assert(1 == *(numbers2.begin() + 1));
+		assert(2 == *(numbers2.begin() + 2));
+		assert(3 == *(numbers2.begin() + 3));
+		assert(4 == *(numbers2.begin() + 4));
 		assert(33 == *(numbers2.begin() + 5));
 	}
 

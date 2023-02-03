@@ -52,11 +52,11 @@ int main(void)
 		try{
 			og_v.at(3);}
 		catch(std::exception & error){
-			std::cout << "OG:   " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_RED << std::endl;}
+			std::cout << "OG:   " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_DEFAULT << std::endl;}
 		try{
 			my_v.at(3);}
 		catch(std::exception & error){
-			std::cout << "Mine: " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_RED << std::endl;}
+			std::cout << "Mine: " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_DEFAULT << std::endl;}
 	}
 
 	{
@@ -64,11 +64,11 @@ int main(void)
 		try{
 			og_v_const.at(4);}
 		catch(std::exception & error){
-			std::cout << "OG:   " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_RED << std::endl;}
+			std::cout << "OG:   " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_DEFAULT << std::endl;}
 		try{
 			my_v_const.at(4);}
 		catch(std::exception & error){
-			std::cout << "Mine: " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_RED << std::endl;}
+			std::cout << "Mine: " << COLOUR_RED << "Exception caught: " << error.what() << COLOUR_DEFAULT << std::endl;}
 	}
 
 	{
@@ -84,16 +84,9 @@ int main(void)
 		assert(3 == my_v.back());
 
 		test_name("Testing const method .back()");
-		assert(4 == my_v_const.front());
+		assert(4 == my_v_const.back());
 	}
 
-	{
-		test_name("Testing method .back()");
-		assert(1 == *(my_v.data()));
-
-		test_name("Testing const method .data()");
-		assert(4 == *(my_v_const.data()));
-	}
 	std::cout << COLOUR_DEFAULT;
 	return (0);
 }

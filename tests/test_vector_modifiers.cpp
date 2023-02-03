@@ -16,17 +16,20 @@
 #include "utils.hpp"
 #include <iterator>
 #include <iostream>
-#include <assert.h>
+
 
 void test_capacity_size_values(ft::vector<int> &mine, std::vector<int> &original)
 {
-
+    std::cout << original.capacity()                    << " o/ capacity /m " << mine.capacity() << "\n";
+    std::cout << original.size()                        << " o/   size   /m " << mine.size() << "\n";
+    std::cout << original.end() - original.begin()      << " o/ it  diff /m " << mine.end()-mine.begin()  << "\n";
 	assert(original.capacity() == mine.capacity());
 	assert(original.size() == mine.size());
 	for (size_t i = 0; i < original.size(); i++)
 	{
 		assert(original[i] == mine[i]);
 	}
+
 }
 
 int main(void)
@@ -72,10 +75,11 @@ int main(void)
 
 	std::vector<int> og_new_v(1, 1);
 	ft::vector<int> my_new_v(1, 1);
+
 	std::vector<int>::iterator	og_it(og_v.begin());
-	std::vector<int>::iterator	og_it2(og_v.begin() + 10);
+	std::vector<int>::iterator	og_it2(og_v.begin() + 2);
 	ft::vector<int>::iterator	my_it(my_v.begin());
-	ft::vector<int>::iterator	my_it2(my_v.begin() + 10);
+	ft::vector<int>::iterator	my_it2(my_v.begin() + 2);
 	
 	{
 		test_name("Testing method .assign() range version with iterators");
@@ -100,10 +104,12 @@ int main(void)
 	
 	{
 		test_name("Testing method .insert() single element insufficient capacity");
+        std::cout << my_new_v.capacity() << " /c/ " << og_new_v.capacity() << "\n";
 		for (size_t i = 0; i < 56; i++)
 		{
 			og_new_v.insert(og_new_v.begin() + 2, 69);
 			my_new_v.insert(my_new_v.begin() + 2, 69);
+            std::cout << my_new_v.capacity() << " /c/ " << og_new_v.capacity() << "\n";
 		}
 		test_capacity_size_values(my_new_v, og_new_v);
 		
@@ -122,23 +128,21 @@ int main(void)
 		my_new_v.insert(my_new_v.end(), 44, 5);
 		og_new_v.insert(og_new_v.begin(), 3, 6);
 		my_new_v.insert(my_new_v.begin(), 3, 6);
-		test_capacity_size_values(my_new_v, og_new_v);
 		og_new_v.insert(og_new_v.begin(), 1, 7);
 		my_new_v.insert(my_new_v.begin(), 1, 7);
 		og_new_v.insert(og_new_v.begin(), 6, 8);
 		my_new_v.insert(my_new_v.begin(), 6, 8);
+		test_capacity_size_values(my_new_v, og_new_v);
 		og_new_v.insert(og_new_v.begin(), 1, 9);
 		my_new_v.insert(my_new_v.begin(), 1, 9);
 		og_new_v.insert(og_new_v.begin(), 20, 321);
 		my_new_v.insert(my_new_v.begin(), 20, 321);
 		test_capacity_size_values(my_new_v, og_new_v);
 	}
-	
 	std::vector<int> og_vec;
 	ft::vector<int> my_vec;
 	
 	{
-		test_name("Testing method .insert() range");
 		std::vector<int> og_new_v;
 		ft::vector<int> my_new_v;
 		for (size_t i = 0; i < 6; i++)
@@ -148,19 +152,30 @@ int main(void)
 			og_vec.push_back(7);
 			my_vec.push_back(7);
 		}
+        test_name("Testing method .insert() range: 1");
 		og_vec.insert(og_vec.begin(), og_new_v.begin(), og_new_v.end());
 		my_vec.insert(my_vec.begin(), my_new_v.begin(), my_new_v.end());
+        test_capacity_size_values(my_vec, og_vec);
+
+        test_name("Testing method .insert() range: 2");
 		og_vec.insert(og_vec.end(), og_new_v.begin(), og_new_v.end());
 		my_vec.insert(my_vec.end(), my_new_v.begin(), my_new_v.end());
-		og_vec.insert(og_vec.end(), og_new_v.begin(), og_new_v.end());
+        test_capacity_size_values(my_vec, og_vec);
+
+        test_name("Testing method .insert() range: 3");
+        og_vec.insert(og_vec.end(), og_new_v.begin(), og_new_v.end());
 		my_vec.insert(my_vec.end(), my_new_v.begin(), my_new_v.end());
-		og_vec.insert(og_vec.end(), og_new_v.begin(), og_new_v.end());
+        test_capacity_size_values(my_vec, og_vec);
+
+        test_name("Testing method .insert() range: 4");
+        og_vec.insert(og_vec.end(), og_new_v.begin(), og_new_v.end());
 		my_vec.insert(my_vec.end(), my_new_v.begin(), my_new_v.end());
-		test_capacity_size_values(my_vec, og_vec);
+        test_capacity_size_values(my_vec, og_vec);
 	}
 	
 	{
 		test_name("Testing method .erase() single");
+        std::cout << og_vec.capacity() << " " << my_vec.capacity() << "\n";
 		og_it = og_vec.erase(og_vec.end() - 1);
 		my_it = my_vec.erase(my_vec.end() - 1);
 		assert(*og_it == *my_it);

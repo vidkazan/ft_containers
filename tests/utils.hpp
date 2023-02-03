@@ -13,10 +13,11 @@
 #ifndef UTILS
 # define UTILS
 # include <iostream>
+# include "colours.h"
 # include <assert.h>
 
 void	test_name(std::string name){
-    std::cout << name + "\n";
+    std::cout << COLOUR_YELLOW << name << COLOUR_DEFAULT << "\n";
 };
 
 #endif //UTILS_HPP
