@@ -51,39 +51,39 @@ int main(void)
 		assert(33 == *(numbers2.begin() + 5));
 	}
 
-//	{
-//		test_name("Testing the copy constructor");
-//		ft::vector<int> my_numbers(6, 33);
-//		std::vector<int> og_numbers(6, 33);
-//		og_numbers.reserve(17);
-//		my_numbers.reserve(17);
-//		ft::vector<int> new_vec(my_numbers);
-//		std::vector<int> new_vec_og(og_numbers);
-//
-//		for (size_t i = 0; i < new_vec.size(); i++)
-//			assert((new_vec[i] == og_numbers[i]) == (my_numbers[i] == new_vec_og[i]));
-//		assert(my_numbers.size() == new_vec.capacity());
-//		assert(og_numbers.size() == new_vec_og.capacity());
-//		assert(my_numbers.size() == new_vec_og.capacity());
-//	}
-//
-//	{
-//		test_name("Testing the assignment operator");
-//		ft::vector<int> my_numbers(6, 33);
-//		ft::vector<int> my_empty;
-//		my_empty = my_numbers;
-//		assert(my_empty == my_numbers);
-//		assert(33 == my_empty[0]);
-//
-//		ft::vector<int> my_non_empty(7, 7);
-//		my_non_empty = my_numbers;
-//		assert(my_non_empty == my_numbers);
-//		assert(33 == my_non_empty[0]);
-//		ft::vector<int> my_new_empty;
-//		ft::vector<int> my_newer_empty;
-//		my_new_empty = my_newer_empty;
-//		assert(my_new_empty == my_newer_empty);
-//	}
+	{
+		test_name("Testing the copy constructor");
+		ft::vector<int> my_numbers(6, 33);
+		std::vector<int> og_numbers(6, 33);
+		og_numbers.reserve(17);
+		my_numbers.reserve(17);
+		ft::vector<int> new_vec(my_numbers);
+		std::vector<int> new_vec_og(og_numbers);
+
+		for (size_t i = 0; i < new_vec.size(); i++)
+			assert((new_vec[i] == og_numbers[i]) == (my_numbers[i] == new_vec_og[i]));
+		assert(my_numbers.size() == new_vec.capacity());
+		assert(og_numbers.size() == new_vec_og.capacity());
+		assert(my_numbers.size() == new_vec_og.capacity());
+	}
+
+	{
+		test_name("Testing the assignment operator");
+		ft::vector<int> my_numbers(6, 33);
+		ft::vector<int> my_empty;
+		my_empty = my_numbers;
+		assert(my_empty == my_numbers);
+		assert(33 == my_empty[0]);
+
+		ft::vector<int> my_non_empty(7, 7);
+		my_non_empty = my_numbers;
+		assert(my_non_empty == my_numbers);
+		assert(33 == my_non_empty[0]);
+		ft::vector<int> my_new_empty;
+		ft::vector<int> my_newer_empty;
+		my_new_empty = my_newer_empty;
+		assert(my_new_empty == my_newer_empty);
+	}
 //	std::cout << COLOUR_DEFAULT;
 
 	return (0);

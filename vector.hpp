@@ -46,6 +46,7 @@ namespace ft
                 _size(0),
                 _capacity(0)
         {
+            _vector = _alloc.allocate(_capacity);
             this->assign(first, last);
         }
         vector( const vector& other ){};
@@ -70,11 +71,14 @@ namespace ft
                 tmp++;
                 range_size++;
             }
+            if(tmp == last) {
+                range_size++;
+            }
             if (range_size < 0)
                 throw std::length_error("Vector");
             this->clear();
             this->reserve(range_size);
-            for (; first != last; ++first)
+            for (; first != last +1; ++first)
                 this->push_back(*first);
         }
 
@@ -129,11 +133,11 @@ namespace ft
         }
         iterator end (void)
         {
-            return iterator(&_vector[0 + _size - 1]);
+            return iterator(&_vector[_size - 1]);
         }
         const_iterator end (void) const
         {
-            return const_iterator(&_vector[0 + _size - 1]);
+            return const_iterator(&_vector[_size - 1]);
         }
 
         iterator erase(iterator position)
@@ -267,7 +271,7 @@ namespace ft
             if((_size + 1) > _capacity)
             {
 //                std::cout << "reserving " << _capacity * 1.5 <<"\n";
-                reserve(((int)(_capacity * 1.5) + 1));
+                reserve(((int)(_capacity * 2) + 1));
             }
             _alloc.construct(&_vector[_size],val);
             _size++;
@@ -342,7 +346,8 @@ namespace ft
                 _alloc.construct(&newVector[i], _vector[i]);
                 _alloc.destroy(&_vector[i]);
             }
-            _alloc.deallocate(_vector, _capacity);
+            if(_capacity)
+                _alloc.deallocate(_vector, _capacity);
             for(size_type i=_size;i<n;i++)
             {
                 _alloc.construct(&newVector[i], val);
@@ -359,7 +364,8 @@ namespace ft
                 _alloc.construct(&newVector[i], _vector[i]);
                 _alloc.destroy(&_vector[i]);
             }
-            _alloc.deallocate(_vector, _capacity);
+            if(_capacity)
+                _alloc.deallocate(_vector, _capacity);
             _vector = newVector;
             _capacity = n;
         }
