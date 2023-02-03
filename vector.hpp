@@ -36,9 +36,12 @@ namespace ft
             }
         };
         template <class InputIterator>
-        vector (InputIterator first, InputIterator last,
+        vector (
+                InputIterator first,
+                InputIterator last,
                 const allocator_type &alloc = allocator_type(),
-                typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type* = 0) :
+                typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type* = 0)
+                 :
                 _alloc(alloc),
                 _size(0),
                 _capacity(0)

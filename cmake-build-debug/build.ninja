@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: ft_containers
+# Project: my_ft_containers
 # Configurations: Debug
 # =============================================================================
 
@@ -39,13 +39,13 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /Users/fcody/Desktop/ft_containers/cmake-build-debug/
+cmake_ninja_workdir = /Users/fcody/Desktop/webserv/my_ft_containers/cmake-build-debug/
 
 #############################################
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/fcody/Desktop/ft_containers/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/fcody/Desktop/ft_containers -B/Users/fcody/Desktop/ft_containers/cmake-build-debug
+  COMMAND = cd /Users/fcody/Desktop/webserv/my_ft_containers/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/fcody/Desktop/webserv/my_ft_containers -B/Users/fcody/Desktop/webserv/my_ft_containers/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -57,42 +57,42 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/fcody/Desktop/ft_containers/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /Users/fcody/Desktop/webserv/my_ft_containers/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
 build edit_cache: phony CMakeFiles/edit_cache.util
 
 # =============================================================================
-# Object build statements for EXECUTABLE target ft_containers
+# Object build statements for EXECUTABLE target my_ft_containers
 
 
 #############################################
-# Order-only phony target for ft_containers
+# Order-only phony target for my_ft_containers
 
-build cmake_object_order_depends_target_ft_containers: phony || CMakeFiles/ft_containers.dir
+build cmake_object_order_depends_target_my_ft_containers: phony || CMakeFiles/my_ft_containers.dir
 
-build CMakeFiles/ft_containers.dir/main.cpp.o: CXX_COMPILER__ft_containers_Debug /Users/fcody/Desktop/ft_containers/main.cpp || cmake_object_order_depends_target_ft_containers
-  DEP_FILE = CMakeFiles/ft_containers.dir/main.cpp.o.d
+build CMakeFiles/my_ft_containers.dir/tests/test_vector_construction.cpp.o: CXX_COMPILER__my_ft_containers_Debug /Users/fcody/Desktop/webserv/my_ft_containers/tests/test_vector_construction.cpp || cmake_object_order_depends_target_my_ft_containers
+  DEP_FILE = CMakeFiles/my_ft_containers.dir/tests/test_vector_construction.cpp.o.d
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=12.0 -std=gnu++98
-  OBJECT_DIR = CMakeFiles/ft_containers.dir
-  OBJECT_FILE_DIR = CMakeFiles/ft_containers.dir
+  OBJECT_DIR = CMakeFiles/my_ft_containers.dir
+  OBJECT_FILE_DIR = CMakeFiles/my_ft_containers.dir/tests
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target ft_containers
+# Link build statements for EXECUTABLE target my_ft_containers
 
 
 #############################################
-# Link the executable ft_containers
+# Link the executable my_ft_containers
 
-build ft_containers: CXX_EXECUTABLE_LINKER__ft_containers_Debug CMakeFiles/ft_containers.dir/main.cpp.o
+build my_ft_containers: CXX_EXECUTABLE_LINKER__my_ft_containers_Debug CMakeFiles/my_ft_containers.dir/tests/test_vector_construction.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=12.0
-  OBJECT_DIR = CMakeFiles/ft_containers.dir
+  OBJECT_DIR = CMakeFiles/my_ft_containers.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = ft_containers
-  TARGET_PDB = ft_containers.dbg
+  TARGET_FILE = my_ft_containers
+  TARGET_PDB = my_ft_containers.dbg
 
 # =============================================================================
 # Target aliases.
@@ -103,9 +103,9 @@ build ft_containers: CXX_EXECUTABLE_LINKER__ft_containers_Debug CMakeFiles/ft_co
 # =============================================================================
 
 #############################################
-# Folder: /Users/fcody/Desktop/ft_containers/cmake-build-debug
+# Folder: /Users/fcody/Desktop/webserv/my_ft_containers/cmake-build-debug
 
-build all: phony ft_containers
+build all: phony my_ft_containers
 
 # =============================================================================
 # Built-in targets
