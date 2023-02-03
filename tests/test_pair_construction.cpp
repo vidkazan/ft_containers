@@ -10,12 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../ft_utils.hpp"
+#include "../utils.hpp"
 #include <iostream>
 #include "colours.h"
 #include <assert.h>
 #include "utils.hpp"
-#include <string.h>
 
 int main(void)
 {

@@ -1,43 +1,47 @@
 #pragma once
 #include <stdint.h>
+#include <cstddef>
+#include "random_access_iterator.hpp"
+
 namespace ft
     {
 
         template< bool B, class T = void >
         struct enable_if {};
-        template<class T>
+
+        template<class T> //partial template specialisation
         struct enable_if<true, T> { typedef T type; };
 
-//        template< class T, T v >
-//        struct integral_constant
-//        {
-//            static const T value = v;
-//            typedef T value_type;
-//            typedef integral_constant<T, v> type;
-//            operator T() { return v; }
-//        };
-//
-//        typedef integral_constant<bool, true> true_type;
-//        typedef integral_constant<bool, false> false_type;
+        template< class T, T v >
+        struct integral_constant
+        {
+            static const T value = v;
+            typedef T value_type;
+            typedef integral_constant<T, v> type;
+            operator T() { return v; }
+        };
+
+        typedef integral_constant<bool, true> true_type;
+        typedef integral_constant<bool, false> false_type;
 
         template< class T >
-        struct is_integral : std::false_type{};
+        struct is_integral : false_type{};
 
-        template <> struct is_integral<int>                     : std::true_type {};
-        template <> struct is_integral<char>                    : std::true_type {};
-        template <> struct is_integral<char16_t>                : std::true_type {};
-        template <> struct is_integral<char32_t>                : std::true_type {};
-        template <> struct is_integral<wchar_t>                 : std::true_type {};
-        template <> struct is_integral<signed char>             : std::true_type {};
-        template <> struct is_integral<short int>               : std::true_type {};
-        template <> struct is_integral<bool>                    : std::true_type{};
-        template <> struct is_integral<long int>                : std::true_type {};
-        template <> struct is_integral<long long int>           : std::true_type {};
-        template <> struct is_integral<unsigned char>           : std::true_type {};
-        template <> struct is_integral<unsigned short int>      : std::true_type {};
-        template <> struct is_integral<unsigned int>            : std::true_type {};
-        template <> struct is_integral<unsigned long int>       : std::true_type {};
-        template <> struct is_integral<unsigned long long int>  : std::true_type {};
+        template <> struct is_integral<int> : true_type {};
+        template <> struct is_integral<char> : true_type {};
+        template <> struct is_integral<char16_t> : true_type {};
+        template <> struct is_integral<char32_t> : true_type {};
+        template <> struct is_integral<wchar_t> : true_type {};
+        template <> struct is_integral<signed char> : true_type {};
+        template <> struct is_integral<short int> : true_type {};
+        template <> struct is_integral<bool> : true_type{};
+        template <> struct is_integral<long int> : true_type {};
+        template <> struct is_integral<long long int> : true_type {};
+        template <> struct is_integral<unsigned char> : true_type {};
+        template <> struct is_integral<unsigned short int> : true_type {};
+        template <> struct is_integral<unsigned int> : true_type {};
+        template <> struct is_integral<unsigned long int> : true_type {};
+        template <> struct is_integral<unsigned long long int> : true_type {};
 
         template<class InputIt1, class InputIt2>
         bool equal( InputIt1 first1, InputIt1 last1,
@@ -72,7 +76,6 @@ namespace ft
         {
             T1	first;
             T2	second;
-
             pair(void) : first(), second() {};
             template<class U, class V>
             pair (const pair<U,V> &pr) : first(pr.first), second(pr.second) {}
@@ -145,8 +148,8 @@ namespace ftm
         typedef T*                             pointer;
         typedef T&                             reference;
         typedef T                              value_type;
-        typedef ptrdiff_t                      difference_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef ptrdiff_t                     difference_type;
+        typedef ft::random_access_iterator_tag iterator_category;
     };
     template <class T>
     struct iterator_traits<const T*> {
@@ -154,7 +157,7 @@ namespace ftm
         typedef const T&                       reference;
         typedef T                              value_type;
         typedef ptrdiff_t                      difference_type;
-        typedef std::random_access_iterator_tag iterator_category;
+        typedef ft::random_access_iterator_tag iterator_category;
     };
 
     // Iterator
