@@ -114,44 +114,39 @@ namespace ft
             if(_size)
                 return _vector[_size-1];
         };
-        iterator begin (void)
+        iterator                begin (void)
         {
             return iterator(&_vector[0]);
         }
-        const_iterator begin (void) const
+        const_iterator          begin (void) const
         {
             return const_iterator(&_vector[0]);
         }
-        iterator end (void)
+        iterator                end (void)
         {
             return iterator(&_vector[_size]);
         }
-        const_iterator end (void) const
+        const_iterator          end (void) const
         {
             return const_iterator(&_vector[_size]);
         }
-
-        reverse_iterator rbegin(void) {
+        reverse_iterator        rbegin(void) {
             return(static_cast<reverse_iterator>(end()));
         }
-
-        const_reverse_iterator rbegin(void) const {
+        const_reverse_iterator  rbegin(void) const {
             return(static_cast<const_reverse_iterator>(end()));
         }
-
-        reverse_iterator rend(void){
-            return(static_cast<reverse_iterator>(begin()));}
-
-
-        const_reverse_iterator rend(void) const{
-            return(static_cast<const_reverse_iterator>(begin()));}
-
-
-        iterator erase(iterator position)
+        reverse_iterator        rend(void){
+            return(static_cast<reverse_iterator>(begin()));
+        }
+        const_reverse_iterator  rend(void) const{
+            return(static_cast<const_reverse_iterator>(begin()));
+        }
+        iterator                erase(iterator position)
         {
             return (this->erase(position, position + 1));
         }
-        iterator erase(iterator first, iterator last)
+        iterator                erase(iterator first, iterator last)
         {
             iterator	tmp;
             size_type	i;
@@ -185,7 +180,7 @@ namespace ft
         };
         bool                    empty() const{return _size == 0;};
         allocator_type          get_allocator() const{return _alloc;};
-        iterator insert(iterator position, const value_type &val)
+        iterator                insert(iterator position, const value_type &val)
         {
             iterator	it;
             size_type	index;
@@ -193,7 +188,7 @@ namespace ft
             this->insert(position, 1, val);
             return iterator(this->begin() + index);
         }
-        void insert(iterator position, size_type n, const value_type &val)
+        void                    insert(iterator position, size_type n, const value_type &val)
         {
             size_type	index;
             iterator	mv_dest;
@@ -237,8 +232,8 @@ namespace ft
             _size += n;
 //            std::cout << "/\n";
         }
-        template <class InputIterator> typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type*
-        insert (iterator position, InputIterator first, InputIterator last)
+                                template <class InputIterator> typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type*
+                                insert (iterator position, InputIterator first, InputIterator last)
         {
 
             size_type n = last - first;
@@ -475,12 +470,6 @@ namespace ft
     {
         return (!(lhs < rhs));
     }
-
-//    template<class T, class Alloc>
-//    void swap(vector<T, Alloc> &x, vector<T, Alloc> &y)
-//    {
-//        x.swap(y);
-//    }
     template <class T, class Alloc>
     void swap (ft::vector<T,Alloc>& x, ft::vector<T,Alloc>& y)
     {
