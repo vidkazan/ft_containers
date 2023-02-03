@@ -1,8 +1,6 @@
 #include "vector.hpp"
 #include <iostream>
 #include <vector>
-#include <string>
-#include <deque>
 
 template<typename T>
 void printVector(const ft::vector<T>& vector)
