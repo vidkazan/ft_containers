@@ -13,10 +13,9 @@
 #include <iostream>
 #include <assert.h>
 #include <string.h>
-#include "../ft_utils.hpp"
-#include "../ft_map.hpp"
-#include "../ft_vector.hpp"
-#include "../ft_tree.hpp"
+#include "../utils.hpp"
+#include "../map.hpp"
+#include "../vector.hpp"
 #include "colours.h"
 #include "utils.hpp"
 #include <map>

@@ -14,8 +14,8 @@
 
 namespace ft
 {
-	template <class T,  class Compare, class Allocator>
-	typename RBTree<T, Compare, Allocator>::size_type RBTree<T, Compare, Allocator>::erase(const value_type &val)
+	template <class T,  class Compare, class Alloc>
+	typename RBTree<T, Compare, Alloc>::size_type RBTree<T, Compare, Alloc>::erase(const value_type &val)
 	{
 		node_ptr found_node = find(val);
 		node_ptr x;
@@ -78,8 +78,8 @@ namespace ft
 		return(1);
 	}
 
-	template <class T,  class Compare, class Allocator>
-	void RBTree<T, Compare, Allocator>::fix_erase(node_ptr x)
+	template <class T,  class Compare, class Alloc>
+	void RBTree<T, Compare, Alloc>::fix_erase(node_ptr x)
 	{
 		node_ptr s;
 		while(x != root && x->colour == BLACK)
@@ -152,8 +152,8 @@ namespace ft
 		x->colour = BLACK;
 	}
 
-	template <class T,  class Compare, class Allocator>
-	void RBTree<T, Compare, Allocator>::rb_transplant(node_ptr u, node_ptr v)
+	template <class T,  class Compare, class Alloc>
+	void RBTree<T, Compare, Alloc>::rb_transplant(node_ptr u, node_ptr v)
 	{
 		if (u->parent == NULL)
 			root = v;

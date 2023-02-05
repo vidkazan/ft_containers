@@ -30,8 +30,8 @@ int main(void)
 		assert(typeid(og_set.key_comp()).name() == typeid(my_set.key_comp()).name());
 	test_name("Testing the method .value_comp()");
 		assert(typeid(og_set.value_comp()).name() == typeid(my_set.value_comp()).name());
-	test_name("Testing the method .get_allocator()");
-		assert(typeid(og_set.get_allocator()).name() == typeid(my_set.get_allocator()).name());
+	test_name("Testing the method .get_Alloc()");
+		assert(typeid(og_set.get_Alloc()).name() == typeid(my_set.get_Alloc()).name());
 
 	std::cout << COLOUR_DEFAULT;
 	return (0);

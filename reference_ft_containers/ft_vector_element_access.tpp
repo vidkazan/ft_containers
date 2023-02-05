@@ -14,24 +14,24 @@
 
 namespace ft
 {
-	template <typename T, typename Allocator>
-	typename vector<T, Allocator>::reference vector<T, Allocator>::operator[](size_type n)
+	template <typename T, typename Alloc>
+	typename vector<T, Alloc>::reference vector<T, Alloc>::operator[](size_type n)
 		{return (*(_begin + n));}
 
-	template <typename T, typename Allocator>
-	typename vector<T, Allocator>::const_reference vector<T, Allocator>::operator[](size_type n) const
+	template <typename T, typename Alloc>
+	typename vector<T, Alloc>::const_reference vector<T, Alloc>::operator[](size_type n) const
 		{return (*(_begin + n));}
 
-	template <typename T, typename Allocator>
-	typename vector<T, Allocator>::reference vector<T, Allocator>::at(size_type n)
+	template <typename T, typename Alloc>
+	typename vector<T, Alloc>::reference vector<T, Alloc>::at(size_type n)
 	{
 		if (n >= size())
-				throw std::out_of_range("vector");
+				throw std::out_of_ra§nge("vector");
 		return (*(_begin + n));
 	}
 
-	template <typename T, typename Allocator>
-	typename vector<T, Allocator>::const_reference vector<T, Allocator>::at(size_type n) const
+	template <typename T, typename Alloc>
+	typename vector<T, Alloc>::const_reference vector<T, Allocator>::at(size_type n) const
 	{
 		if (n >= size())
 				throw std::out_of_range("vector");

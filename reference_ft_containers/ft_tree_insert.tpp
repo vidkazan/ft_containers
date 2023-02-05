@@ -14,8 +14,8 @@
 
 namespace ft
 {
-	template <class T,  class Compare, class Allocator>
-	typename RBTree<T, Compare, Allocator>::node_ptr RBTree<T, Compare, Allocator>::insert_val(const value_type &val)
+	template <class T,  class Compare, class Alloc>
+	typename RBTree<T, Compare, Alloc>::node_ptr RBTree<T, Compare, Alloc>::insert_val(const value_type &val)
 	{
 		//Binary Search Insertion
 		node_ptr new_node	= node_alloc.allocate(1);
@@ -76,8 +76,8 @@ namespace ft
 		return(new_node);
 	}
 
-	template <class T,  class Compare, class Allocator>
-	void RBTree<T, Compare, Allocator>::fix_insert(node_ptr child)
+	template <class T,  class Compare, class Alloc>
+	void RBTree<T, Compare, Alloc>::fix_insert(node_ptr child)
 	{
 		node_ptr uncle;
 
@@ -137,8 +137,8 @@ namespace ft
 	}
 
 	// rotate left at node x
-	template <class T,  class Compare, class Allocator>
-	void RBTree<T, Compare, Allocator>::rotate_left(node_ptr x)
+	template <class T,  class Compare, class Alloc>
+	void RBTree<T, Compare, Alloc>::rotate_left(node_ptr x)
 	{
 		node_ptr y = x->right;
 		x->right = y->left;
@@ -158,7 +158,7 @@ namespace ft
 	}
 
 	// rotate right at node x
-	template <class T,  class Compare, class Allocator>
+	template <class T,  class Compare, class Alloc>
 	void RBTree<T, Compare, Allocator>::rotate_right(node_ptr x)
 	{
 		node_ptr y = x->left;

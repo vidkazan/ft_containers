@@ -20,12 +20,12 @@
 
 namespace ft
 {
-template <typename T, typename Allocator = std::allocator<T> >
+template <typename T, typename Alloc = std::Alloc<T> >
 class vector
 {
 public:
 	typedef T														value_type;
-	typedef Allocator												allocator_type;
+	typedef Alloc												allocator_type;
 	typedef typename allocator_type::reference						reference;
 	typedef typename allocator_type::const_reference				const_reference;
 	typedef typename allocator_type::pointer						pointer;

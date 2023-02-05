@@ -19,7 +19,7 @@
 
 namespace ft
 {
-	template< class Key, class Compare = std::less<Key>, class Allocator = std::allocator<Key> >
+	template< class Key, class Compare = std::less<Key>, class Alloc = std::Alloc<Key> >
 	class set
 	{
 		public:
@@ -29,11 +29,11 @@ namespace ft
 			typedef std::ptrdiff_t									difference_type;
 			typedef Compare											key_compare;
 			typedef Compare											value_compare;
-			typedef Allocator										allocator_type;
+			typedef Alloc										allocator_type;
 			typedef value_type &									reference;
 			typedef const value_type &								const_reference;
-			typedef typename Allocator::pointer						pointer;
-			typedef typename Allocator::const_pointer				const_pointer;
+			typedef typename Alloc::pointer						pointer;
+			typedef typename Alloc::const_pointer				const_pointer;
 		private:
 			typedef ft::RBTree< value_type, value_compare, allocator_type>		tree_type;
 		public:
@@ -51,7 +51,7 @@ namespace ft
 		set(void) : tree(value_compare(), allocator_type()) {};
 
 		///Compare
-		explicit set(const Compare& comp, const Allocator& alloc = Allocator()) : tree(comp, alloc) {};
+		explicit set(const Compare& comp, const Alloc& alloc = Allocator()) : tree(comp, alloc) {};
 
 		///Copy
 		set(const set &copy) : tree(copy.value_comp(), copy.get_allocator()) {*this = copy;};

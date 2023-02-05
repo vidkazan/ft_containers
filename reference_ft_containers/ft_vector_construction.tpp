@@ -16,8 +16,8 @@
 namespace ft
 {
 	//Default Constructor
-	template<typename T, typename Allocator>
-	vector<T, Allocator>::vector(const allocator_type &alloc) :
+	template<typename T, typename Alloc>
+	vector<T, Alloc>::vector(const Allocator_type &alloc) :
 	_alloc(alloc),
 	_capacity(0),
 	_begin(NULL),
@@ -26,8 +26,8 @@ namespace ft
 	}
 
 	//Fill constructor
-	template<typename T, typename Allocator>
-	vector<T, Allocator>::vector(size_type n, const value_type &val, const allocator_type &alloc) :
+	template<typename T, typename Alloc>
+	vector<T, Alloc>::vector(size_type n, const value_type &val, const allocator_type &alloc) :
 	_alloc(alloc),
 	_capacity(n),
 	_begin(NULL),
@@ -44,9 +44,9 @@ namespace ft
 	}
 
 	// range constructor
-	template<typename T, typename Allocator>
+	template<typename T, typename Alloc>
 	template <class InputIterator>
-	vector<T, Allocator>::vector(InputIterator first, InputIterator last, const allocator_type &alloc,
+	vector<T, Alloc>::vector(InputIterator first, InputIterator last, const allocator_type &alloc,
 		typename enable_if<!is_integral<InputIterator>::value>::type*) :
 	_alloc(alloc),
 	_capacity(last - first),
@@ -64,8 +64,8 @@ namespace ft
 	}
 
 	//copy constructor 
-	template<typename T, typename Allocator>
-	vector<T, Allocator>::vector(const vector &x)
+	template<typename T, typename Alloc>
+	vector<T, Alloc>::vector(const vector &x)
 	{
 		_capacity = x.size();
 		_begin = _alloc.allocate(_capacity);
@@ -77,8 +77,8 @@ namespace ft
 		}
 	}
 
-	template<typename T, typename Allocator>
-	vector<T, Allocator> & vector<T, Allocator>::operator=(const vector &x)
+	template<typename T, typename Alloc>
+	vector<T, Alloc> & vector<T, Allocator>::operator=(const vector &x)
 	{
 		this->~vector();
 		_capacity = x.size();

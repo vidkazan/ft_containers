@@ -15,14 +15,14 @@
 
 namespace ft
 {
-	template <class T,  class Compare, class Allocator>
-	void RBTree<T, Compare, Allocator>::print_tree(void) const
+	template <class T,  class Compare, class Alloc>
+	void RBTree<T, Compare, Alloc>::print_tree(void) const
 	{
 		_printHelper("", root, false);
 	}
 
-	template <class T,  class Compare, class Allocator>
-	void RBTree<T, Compare, Allocator>::_printHelper(const std::string& prefix, const node_ptr n, bool isLeft) const
+	template <class T,  class Compare, class Alloc>
+	void RBTree<T, Compare, Alloc>::_printHelper(const std::string& prefix, const node_ptr n, bool isLeft) const
 	{
 		if (n != nil_node && n != nullptr)
 		{
@@ -39,8 +39,8 @@ namespace ft
 		}
 	}
 
-	template <class T,  class Compare, class Allocator>
-	typename RBTree<T, Compare, Allocator>::node_ptr RBTree<T, Compare, Allocator>::find(const value_type &val) const
+	template <class T,  class Compare, class Alloc>
+	typename RBTree<T, Compare, Alloc>::node_ptr RBTree<T, Compare, Alloc>::find(const value_type &val) const
 	{
 		node_ptr node = root;
 
@@ -56,9 +56,9 @@ namespace ft
 		return (node);
 	}
 
-	template <class T,  class Compare, class Allocator>
+	template <class T,  class Compare, class Alloc>
 	template<class Key>
-	typename RBTree<T, Compare, Allocator>::node_ptr RBTree<T, Compare, Allocator>::find_by_only_key(const Key &key) const
+	typename RBTree<T, Compare, Alloc>::node_ptr RBTree<T, Compare, Alloc>::find_by_only_key(const Key &key) const
 	{
 		node_ptr node = root;
 
@@ -74,7 +74,7 @@ namespace ft
 		return (node);
 	}
 
-	template <class T,  class Compare, class Allocator>
+	template <class T,  class Compare, class Alloc>
 	typename RBTree<T, Compare, Allocator>::size_type RBTree<T, Compare, Allocator>::size(void) const
 	{
 		return (_size);

@@ -13,10 +13,9 @@
 #include <iostream>
 #include <assert.h>
 #include <string.h>
-#include "../ft_utils.hpp"
-#include "../ft_map.hpp"
-#include "../ft_vector.hpp"
-#include "../ft_tree.hpp"
+#include "../utils.hpp"
+#include "../map.hpp"
+#include "../vector.hpp"
 #include "colours.h"
 #include "utils.hpp"
 #include <algorithm>
@@ -37,7 +36,7 @@ int main(void)
 	my_mapty.insert(ft::make_pair(4, 2));
 	ft::map<int, int> my_iter_map(my_mapty.begin(), my_mapty.end());
 	assert(my_mapty == my_iter_map);
-	
+
 	test_name("Testing the assignment operator");
 	my_mapty2 = my_iter_map;
 	assert(my_mapty == my_iter_map);

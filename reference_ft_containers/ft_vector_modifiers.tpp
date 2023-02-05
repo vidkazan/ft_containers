@@ -15,9 +15,9 @@
 #include <signal.h>
 namespace ft
 {
-	template <typename T, typename Allocator>
+	template <typename T, typename Alloc>
 	template <class InputIterator>
-	void vector<T, Allocator>::assign (InputIterator first, InputIterator last,
+	void vector<T, Alloc>::assign (InputIterator first, InputIterator last,
 										typename enable_if<!is_integral<InputIterator>::value>::type*)
 	{
 		clear();
@@ -40,8 +40,8 @@ namespace ft
 		}
 	}
 
-	template <typename T, typename Allocator>
-	void vector<T, Allocator>::assign(size_type n, const value_type &val)
+	template <typename T, typename Alloc>
+	void vector<T, Alloc>::assign(size_type n, const value_type &val)
 	{
 		clear();
 		if (n)
@@ -61,15 +61,15 @@ namespace ft
 		}
 	}
 
-	template <typename T, typename Allocator>
-	void vector<T, Allocator>::pop_back(void)
+	template <typename T, typename Alloc>
+	void vector<T, Alloc>::pop_back(void)
 	{
 		_alloc.destroy(&back());
 		_end--;
 	}
 
-	template <typename T, typename Allocator>
-	void vector<T, Allocator>::push_back(const value_type &val)
+	template <typename T, typename Alloc>
+	void vector<T, Alloc>::push_back(const value_type &val)
 	{
 		size_type old_size = size();
 		if (old_size + 1 > _capacity)
@@ -78,8 +78,8 @@ namespace ft
 		_end++;
 	}
 
-	template <typename T, typename Allocator>
-	typename vector<T, Allocator>::iterator vector<T, Allocator>::insert (iterator position, const value_type &val)
+	template <typename T, typename Alloc>
+	typename vector<T, Alloc>::iterator vector<T, Allocator>::insert (iterator position, const value_type &val)
 	{
 		size_type pos = end() - position;
 		size_type diff = position - begin();

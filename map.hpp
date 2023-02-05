@@ -2,22 +2,17 @@
 // Created by Dmitrii Grigorev on 29.04.22.
 //
 #pragma once
-//#define RED "\e[0;31m"
-#define BLUE "\e[0;36m"
-#define LIGHT_GREY "\e[0;37m"
-#define GREY "\e[0;90m"
-#define WHITE "\e[0;38m"
-#define WHITE_LINE "\e[4;37m"
-#define RED_LINE "\e[4;31m"
 #include "utils.hpp"
 #include <iomanip>
 #include <iostream>
+#include "./map_iterator.hpp"
+#include "./reverse_iterator.hpp"
 
-namespace ftm {
+namespace ft {
     // Map node
     template <class T>
     struct node{
-            typedef ftm::node<T> node_type;
+            typedef ft::node<T> node_type;
             typedef node_type*   node_pointer;
 
             node_color color;
@@ -105,7 +100,7 @@ namespace ftm {
         typedef             T 										                mapped_type;
         typedef             Allocator                               	            allocator_type;
 
-        typedef             std::pair<const Key, T>					                value_type;
+        typedef             ft::pair<const Key, T>					                value_type;
 
         typedef             node<value_type>                                        node_type;
         typedef             node_type*                                              node_pointer;
@@ -119,9 +114,15 @@ namespace ftm {
         typedef             size_t                                                  size_type;
         typedef             ptrdiff_t                                               difference_type;
 
-        typedef typename    allocator_type::template rebind<ftm::node<value_type> >::other	node_allocator_type;
+        typedef typename    allocator_type::template rebind<ft::node<value_type> >::other	node_allocator_type;
 
         typedef             Compare									                key_compare;
+
+        typedef MapIterator<node_type>					            iterator;
+        typedef const_MapIterator<node_type>				        const_iterator;
+        typedef ft::reverse_iterator<iterator>								reverse_iterator;
+        typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
+
         class               value_compare : std::binary_function<value_type, value_type, bool> {
             friend class map;
         public:
@@ -132,7 +133,6 @@ namespace ftm {
             key_compare _comp;
             value_compare(key_compare comp) : _comp(comp) {}
         };
-
         map(): _root(NULL), _size(0) {
             createLeafNode();
         }
@@ -150,17 +150,10 @@ namespace ftm {
                 return false;
             return true;
         };
+
         size_type               size() const{};
         size_type               max_size() const{};
 
-//         modifiers
-//        std::pair<iterator, bool>    insert(const value_type& x) {
-//            insertStore(x);
-//            std::pair<iterator,bool> res;
-//            iterator it = begin();
-//            res = std::make_pair(it,true);
-//            return res;
-//        };
         void    insert(const value_type& x) {
             insertStore(x);
         }
@@ -181,6 +174,32 @@ namespace ftm {
             return _leaf;
         };
 
+        iterator    begin(){
+            iterator begin = this->_root;
+            return begin;
+        }
+
+        iterator    end(){
+            iterator end = this->_leaf;
+            return end;
+        }
+
+        mapped_type at(const Key &key)
+        {
+            node_pointer n = this->find(key);
+            if (n != _leaf)
+                return(n->data.second);
+            throw std::out_of_range("key not found");
+        }
+
+        mapped_type &operator[](const Key &key)
+        {
+            node_pointer n = this->find(key);
+            if (n == _leaf)
+                insert(ft::make_pair(key, T()));
+            n = this->find(key);
+            return (n->data.second);
+        }
 
     private:
         node_pointer    	_root;
@@ -233,8 +252,8 @@ namespace ftm {
                 }
                 return;
             }
-            ftm::swap(a->left, b->left);
-            ftm::swap(a->right, b->right);
+            ft::swap(a->left, b->left);
+            ft::swap(a->right, b->right);
         }
         void            swap_2_replacing_parents(node_pointer a, node_pointer b, node_pointer ap, node_pointer bp) {
             if(!ap) {
@@ -259,7 +278,7 @@ namespace ftm {
                 b->parent = ap;
                 return;
             }
-            ftm::swap(a->parent,b->parent);
+            ft::swap(a->parent,b->parent);
         }
         void            swap_1_replacing_in_parents(node_pointer a, node_pointer b) {
             if(a->parent && a->parent == b) {
@@ -320,7 +339,7 @@ namespace ftm {
             swap_2_replacing_parents(a,b,ap,bp);
             swap_3_replacing_children(a,b,ap,bp);
             swap_4_replacing_in_children(a,b,ap,bp);
-            ftm::swap(a->color,b->color);
+            ft::swap(a->color,b->color);
 //            log(a,b,"swap");
         }
         void            log(node_pointer a, node_pointer b,std::string mode) {
@@ -778,4 +797,46 @@ namespace ftm {
             return NULL;
         }
     };
+
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator ==(	const map<Key, T, Compare, Allocator>& x,
+                         const map<Key, T, Compare, Allocator>& y)
+    {
+        return(x.size() == y.size() && ft::equal(x.begin(), x.end(), y.begin()));
+    }
+
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator !=(	const map<Key, T, Compare, Allocator>& x,
+                         const map<Key, T, Compare, Allocator>& y)
+    {
+        return!(x == y);
+    }
+
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator <(	const map<Key, T, Compare, Allocator>& x,
+                        const map<Key, T, Compare, Allocator>& y)
+    {
+        return(ft::lexicographical_compare(x.begin(), x.end(), y.begin(), y.end()));
+    }
+
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator >(	const map<Key, T, Compare, Allocator>& x,
+                        const map<Key, T, Compare, Allocator>& y)
+    {
+        return(y < x);
+    }
+
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator >=(	const map<Key, T, Compare, Allocator>& x,
+                         const map<Key, T, Compare, Allocator>& y)
+    {
+        return !(x < y);
+    }
+
+    template <class Key, class T, class Compare, class Allocator>
+    bool operator <=(	const map<Key, T, Compare, Allocator>& x,
+                         const map<Key, T, Compare, Allocator>& y)
+    {
+        return !(y < x);
+    }
 }

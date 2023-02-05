@@ -29,7 +29,7 @@ class RBTreeIterator : public ft::iterator<ft::bidirectional_iterator_tag, typen
 		typedef const typename node_type::value_type&													const_reference;
 	
 
-	template <class T,  class Compare, class Allocator>
+	template <class T,  class Compare, class Alloc>
 	friend class RBTree;
 	///CONSTRUCTION
 	protected:
@@ -226,7 +226,7 @@ class const_RBTreeIterator : public ft::iterator<ft::bidirectional_iterator_tag,
 	};
 	
 	const_RBTreeIterator operator++(int) {const_RBTreeIterator temp(*this); ++(*this); return (temp);} //post-increment
-	const_RBTreeIterator operator--(int) {const_RBTreeIterator temp(*this); --(*this); return(temp);} //post-derement
+	const_RBTreeIterator operator--(int) {const_RBTreeIterator temp(*this); --(*this); return(temp);} //post-decrement
 	reference operator*(void) {return *(ptr->value);};
 	pointer operator->(void) {return ptr->value;};
 	const_reference operator*(void) const {return *(ptr->value);};
@@ -269,5 +269,5 @@ class const_RBTreeIterator : public ft::iterator<ft::bidirectional_iterator_tag,
 #endif
 
 
-// 'RBTreeIterator<ft::RBTree<const ft::pair<const int, int>, ft::map<int, int, std::__1::plus<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::Node>'
-// 'RBTreeIterator<ft::RBTree<const ft::pair<const int, int>, ft::map<int, int, std::__1::less<int>, std::__1::allocator<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::Node>'
+// 'RBTreeIterator<ft::RBTree<const ft::pair<const int, int>, ft::map<int, int, std::__1::plus<int>, std::__1::Alloc<ft::pair<const int, int> > >::value_compare, std::__1::Alloc<ft::pair<const int, int> > >::Node>'
+// 'RBTreeIterator<ft::RBTree<const ft::pair<const int, int>, ft::map<int, int, std::__1::less<int>, std::__1::Alloc<ft::pair<const int, int> > >::value_compare, std::__1::allocator<ft::pair<const int, int> > >::Node>'
