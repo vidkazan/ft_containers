@@ -12,22 +12,26 @@ namespace ft {
     // Map node
     template <class T>
     struct node{
-            typedef ft::node<T> node_type;
-            typedef node_type*   node_pointer;
+            typedef ft::node<T>     node_type;
+            typedef T               value_type;
+            typedef node_type*      node_pointer;
 
-            node_color color;
-            T data;
-            node_type * left;
-            node_type * right;
-            node_type * parent;
+            node_color  color;
+            value_type* data;
+            node_type*  left;
+            node_type*  right;
+            node_type*  parent;
 
-            node(T data)
-                : data(data)
+            node(value_type value)
+                : data(value)
                 , color(NODE_COLOR_BLACK)
                 , left(NULL)
                 , right(NULL)
                 , parent(NULL) {};
             node_pointer getParent() { return parent; }
+//            value_type getValue(){
+//                return data;
+//            }
             node_pointer getSibling(){
             if(this->parent) {
                 if(parent->left == this) {
@@ -60,7 +64,7 @@ namespace ft {
             node_pointer getUncle(){
                 if(!parent || !parent->parent)
                     return NULL;
-                if(parent->data.first < parent->parent->data.first) {
+                if(parent->data->first < parent->parent->data->first) {
                     return parent->parent->right;
                 } else {
                     return parent->parent->left;
@@ -90,56 +94,69 @@ namespace ft {
             bool isBlack() {
                 return color == NODE_COLOR_BLACK;
             }
+            T* operator*(){
+                return this->data;
+            }
+            T* operator->(){
+            return *(this->data);
+        }
     };
 
     template<class Key, class T, class Compare = std::less<T>,
-            class Allocator = std::allocator<T> >
+            class Allocator = std::allocator<ft::pair<const Key,T> > >
     class map {
     public:
         typedef             Key 									                key_type;
         typedef             T 										                mapped_type;
         typedef             Allocator                               	            allocator_type;
-
         typedef             ft::pair<const Key, T>					                value_type;
-
         typedef             node<value_type>                                        node_type;
         typedef             node_type*                                              node_pointer;
-
         typedef typename    Allocator::pointer        			                    pointer;
         typedef typename    Allocator::const_pointer  			                    const_pointer;
         typedef typename    Allocator::reference      			                    reference;
         typedef typename    Allocator::const_reference			                    const_reference;
-
-
         typedef             size_t                                                  size_type;
         typedef             ptrdiff_t                                               difference_type;
-
+        typedef             Compare									                key_compare;
+        typedef             MapIterator<node_type>					                iterator;
+        typedef             const_MapIterator<node_type>				            const_iterator;
+        typedef             ft::reverse_iterator<iterator>							reverse_iterator;
+        typedef             ft::reverse_iterator<const_iterator>					const_reverse_iterator;
         typedef typename    allocator_type::template rebind<ft::node<value_type> >::other	node_allocator_type;
 
-        typedef             Compare									                key_compare;
-
-        typedef MapIterator<node_type>					            iterator;
-        typedef const_MapIterator<node_type>				        const_iterator;
-        typedef ft::reverse_iterator<iterator>								reverse_iterator;
-        typedef ft::reverse_iterator<const_iterator>						const_reverse_iterator;
-
         class               value_compare : std::binary_function<value_type, value_type, bool> {
-            friend class map;
-        public:
-            bool operator()(const value_type &lhs, const value_type &rhs) const {
-                return _comp(lhs.first, rhs.first);
-            }
-        protected:
-            key_compare _comp;
-            value_compare(key_compare comp) : _comp(comp) {}
+                friend class map;
+            public:
+                bool operator()(const value_type &lhs, const value_type &rhs) const {
+                    return _comp(lhs.first, rhs.first);
+                }
+            protected:
+                key_compare _comp;
+                value_compare(key_compare comp) : _comp(comp) {}
         };
         map(): _root(NULL), _size(0) {
             createLeafNode();
         }
         map(const map& x) {
-            createLeafNode();
+            *this = x;
         }
         ~map() {};
+
+        template <class InputIterator>
+        map (
+                InputIterator first,
+                InputIterator last,
+                const key_compare& comp = key_compare(),
+                const allocator_type& alloc = allocator_type()
+        ) : _root(NULL), _size(0) {
+            createLeafNode();
+            while(first != last)
+            {
+                insert(*first);
+                first++;
+            }
+        }
 
         allocator_type          get_allocator() const {return _allocator;}
         node_pointer            root(void) const {return _root;};
@@ -151,7 +168,9 @@ namespace ft {
             return true;
         };
 
-        size_type               size() const{};
+        size_type               size() const{
+            return _size;
+        };
         size_type               max_size() const{};
 
         void    insert(const value_type& x) {
@@ -160,12 +179,13 @@ namespace ft {
         void    erase(const key_type& k) {
             eraseStore(k);
         }
+
         node_pointer    find(const key_type& x) {
             node_pointer current = _root;
-            while(current != NULL) {
-                if(x == current->data.first)
+            while(current != NULL && current->data && current->data->first) {
+                if(x == current->data->first)
                     return current;
-                if(x < current->data.first) {
+                if(x < current->data->first) {
                     current = current->left;
                 } else {
                     current = current->right;
@@ -174,31 +194,44 @@ namespace ft {
             return _leaf;
         };
 
-        iterator    begin(){
-            iterator begin = this->_root;
-            return begin;
+        iterator        begin(){
+            node_pointer node = this->_root;
+            while(node->left != _leaf){
+                node = node->left;
+            }
+            return iterator(node,node,_leaf);
         }
-
-        iterator    end(){
-            iterator end = this->_leaf;
-            return end;
+        const_iterator  begin() const{
+            node_pointer node = this->_root;
+            while(node->left != _leaf){
+                node = node->left;
+            }
+            return const_iterator(node,node,_leaf);
         }
-
-        mapped_type at(const Key &key)
+        iterator        end(){
+            node_pointer node = this->_root;
+            while(node->left != _leaf){
+                node = node->left;
+            }
+            return iterator(_leaf,node,_leaf);
+        }
+        const_iterator  end() const {
+            return const_iterator(_leaf);
+        }
+        mapped_type     at(const Key &key)
         {
             node_pointer n = this->find(key);
             if (n != _leaf)
-                return(n->data.second);
+                return(n->data->second);
             throw std::out_of_range("key not found");
         }
-
-        mapped_type &operator[](const Key &key)
+        mapped_type&    operator[](const Key &key)
         {
             node_pointer n = this->find(key);
             if (n == _leaf)
                 insert(ft::make_pair(key, T()));
             n = this->find(key);
-            return (n->data.second);
+            return (n->data->second);
         }
 
     private:
@@ -390,20 +423,23 @@ namespace ft {
             }
         }
         void            createLeafNode() {
-            _leaf  = _node_allocator.allocate(1);
-            _node_allocator.construct(_leaf, value_type());
+            _leaf = _node_allocator.allocate(1);
             _leaf->color = NODE_COLOR_BLACK;
             _leaf->parent = NULL;
             _leaf->left = NULL;
             _leaf->right = NULL;
+            _leaf->data = NULL;
         }
+
         node_pointer    createNode(const value_type& x, node_pointer parent) {
             node_pointer node  = _node_allocator.allocate(1);
-            _node_allocator.construct(node, x);
             node->color = NODE_COLOR_RED;
             node->left = _leaf;
             node->right = _leaf;
             node->parent = parent;
+
+            node->data = _allocator.allocate(1);
+            _allocator.construct(node->data,x);
             return node;
         }
         node_pointer    insertEntry(const value_type& x) {
@@ -411,13 +447,13 @@ namespace ft {
             node_pointer previous = _root->parent;
             while(current != _leaf) {
                 previous = current;
-                if(x.first < current->data.first) {
+                if(x.first < current->data->first) {
                     current = current->left;
                 } else {
                     current = current->right;
                 }
             }
-            if(previous->data.first > x.first){
+            if(previous->data->first > x.first){
                 previous->left = createNode(x, previous);
                 return previous->left;
             } else {
@@ -529,15 +565,16 @@ namespace ft {
             _node_allocator.deallocate(node,1);
         }
         void            insertStore(const value_type& x) {
-//            log("\n___________________\nnow inserting", x.first);
             if(find(x.first) != _leaf) {
                 return;
             }
             if(this->empty()) {
                 _root = createNode(x, _root);
                 _root->color = NODE_COLOR_BLACK;
+                _size++;
                 return;
             }
+            _size++;
             node_pointer place = insertEntry(x);
             int         insertCase = 0;
             while(place != NULL) {
@@ -579,14 +616,13 @@ namespace ft {
                     }
                 }
                 else { // Bad place
-                    log("insertStore: insert balance: non-existent case ", place->data.first);
+                    log("insertStore: insert balance: non-existent case ", place->data->first);
                     exit(1);
                 }
                 place = balanceInsert(insertCase,place);
                 if(insertCase == 60 || insertCase == 61 || insertCase == 50 || insertCase == 51)
                     return;
             }
-
         }
         node_pointer    getSuccessor(node_pointer node) {
             node_pointer succ;
