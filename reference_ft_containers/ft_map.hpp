@@ -263,6 +263,7 @@ class map
 	}
 
 	///LOOKUP
+	///LOOKUP
 	size_type count( const Key& key ) const
 	{
 		if (tree.find_by_only_key(key) == tree.getNil())

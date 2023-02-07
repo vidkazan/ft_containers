@@ -43,7 +43,7 @@ class RBTree
 	
 	public:
 		typedef T												value_type;
-		typedef Alloc										allocator_type;
+		typedef Alloc							        		allocator_type;
 		typedef Compare											value_comp;
 		typedef size_t											size_type;
 		typedef ft::Node<value_type>							node;
@@ -54,7 +54,7 @@ class RBTree
 	private:
 		node_ptr				root;
 		node_ptr				nil_node;
-		std::Alloc<node>	node_alloc;
+		std::allocator<node>	node_alloc;
 		allocator_type			alloc;
 		value_comp				comp;
 		size_type				_size;

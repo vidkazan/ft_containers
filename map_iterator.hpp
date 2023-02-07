@@ -101,8 +101,16 @@ namespace ft
             }
             return(*this);
         };
-        MapIterator operator++(int) {MapIterator temp(*this); ++(*this); return (temp);} //post-increment
-        MapIterator operator--(int) { MapIterator temp(*this); --(*this); return(temp);} //post-decrement
+        MapIterator operator++(int) {
+            MapIterator temp(*this);
+            ++(*this);
+            return (temp);
+        } //post-increment
+        MapIterator operator--(int) {
+            MapIterator temp(*this);
+            --(*this);
+            return(temp);
+        } //post-decrement
         reference operator*(void) {return *(ptr->data);};
         pointer operator->(void) {return ptr->data;};
         const_reference operator*(void) const {return *(ptr->data);};
