@@ -175,9 +175,11 @@ namespace ft {
 
         void    insert(const value_type& x) {
             insertStore(x);
+            updateLeafParent();
         }
         void    erase(const key_type& k) {
             eraseStore(k);
+            updateLeafParent();
         }
         iterator    find(const key_type& x) {
             node_pointer current = _root;
@@ -217,8 +219,8 @@ namespace ft {
 
         const_iterator lower_bound (const key_type& key) const
         {
-            const_iterator it = begin();
-            const_iterator end = end();
+            const_iterator it = this->begin();
+            const_iterator end = this->end();
             while(it != end && key_comp()(it->first, key))
                 it++;
             return (it);
@@ -226,8 +228,8 @@ namespace ft {
 
         iterator upper_bound (const key_type& key)
         {
-            iterator it = begin();
-            iterator end = end();
+            iterator it = this->begin();
+            iterator end = this->end();
             while(it != end && !key_comp()(key, it->first))
                 it++;
             return (it);
@@ -311,6 +313,14 @@ namespace ft {
         node_allocator_type _node_allocator;
         allocator_type      _allocator;
         key_compare         _cmp;
+
+        void    updateLeafParent(){
+            node_pointer tmp = _root;
+            while(tmp && tmp->right && tmp->right->data) {
+                tmp = tmp->right;
+            }
+            _leaf->parent = tmp;
+        }
 
         node_pointer    findPointer(const key_type& x) {
             node_pointer current = _root;
