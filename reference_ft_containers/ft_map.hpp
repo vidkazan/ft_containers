@@ -99,7 +99,7 @@ class map
 		return(*this);
 	}
 
-	///DECONSTRUCTION
+x	///DECONSTRUCTION
 	~map(void)
 	{
 		clear();

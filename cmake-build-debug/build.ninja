@@ -72,8 +72,8 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 
 build cmake_object_order_depends_target_my_ft_containers: phony || CMakeFiles/my_ft_containers.dir
 
-build CMakeFiles/my_ft_containers.dir/tests/test_map_lookup.cpp.o: CXX_COMPILER__my_ft_containers_Debug /Users/fcody/Desktop/webserv/my_ft_containers/tests/test_map_lookup.cpp || cmake_object_order_depends_target_my_ft_containers
-  DEP_FILE = CMakeFiles/my_ft_containers.dir/tests/test_map_lookup.cpp.o.d
+build CMakeFiles/my_ft_containers.dir/tests/test_map_modifiers.cpp.o: CXX_COMPILER__my_ft_containers_Debug /Users/fcody/Desktop/webserv/my_ft_containers/tests/test_map_modifiers.cpp || cmake_object_order_depends_target_my_ft_containers
+  DEP_FILE = CMakeFiles/my_ft_containers.dir/tests/test_map_modifiers.cpp.o.d
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=12.0 -std=gnu++98
   OBJECT_DIR = CMakeFiles/my_ft_containers.dir
   OBJECT_FILE_DIR = CMakeFiles/my_ft_containers.dir/tests
@@ -86,7 +86,7 @@ build CMakeFiles/my_ft_containers.dir/tests/test_map_lookup.cpp.o: CXX_COMPILER_
 #############################################
 # Link the executable my_ft_containers
 
-build my_ft_containers: CXX_EXECUTABLE_LINKER__my_ft_containers_Debug CMakeFiles/my_ft_containers.dir/tests/test_map_lookup.cpp.o
+build my_ft_containers: CXX_EXECUTABLE_LINKER__my_ft_containers_Debug CMakeFiles/my_ft_containers.dir/tests/test_map_modifiers.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -mmacosx-version-min=12.0
   OBJECT_DIR = CMakeFiles/my_ft_containers.dir
   POST_BUILD = :

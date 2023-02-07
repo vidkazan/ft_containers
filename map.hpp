@@ -136,7 +136,12 @@ namespace ft {
                 value_compare(key_compare comp) : _comp(comp) {}
         };
 
-        map(): _root(NULL), _size(0) {
+        map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type())
+            :
+                _root(NULL),
+                _size(0),
+                _allocator(alloc),
+                _cmp(comp) {
             createLeafNode();
         }
         map(const map& x) {
@@ -160,28 +165,72 @@ namespace ft {
         }
 
         allocator_type          get_allocator() const {return _allocator;}
-        node_pointer            root(void) const {return _root;};
-        // capacity
+        /// capacity
         bool                    empty() const {
             if(_root != NULL)
                 return false;
             return true;
         };
-
         size_type               size() const{
             return _size;
         };
         size_type               max_size() const{};
 
-        void    insert(const value_type& x) {
-            insertStore(x);
-            updateLeafParent();
+        pair<iterator, bool>    insert(const value_type& x) {
+            node_pointer p = findPointer(x.first);
+            if (p == _leaf) {
+                pair<iterator,bool> res = ft::make_pair(insertStore(x), true);
+                updateLeafParent();
+                return (res);
+            }
+            return(ft::make_pair(insertStore(x), false));
         }
-        void    erase(const key_type& k) {
-            eraseStore(k);
-            updateLeafParent();
+
+        iterator insert (iterator position, const value_type& value)
+        {
+            static_cast<void>(position);
+            return (insertStore(value));
         }
-        iterator    find(const key_type& x) {
+
+        template< class InputIt >
+        void            insert( InputIt first, InputIt last, typename enable_if<!is_integral<InputIt>::value>::type* = nullptr )
+        {
+            for (; first != last; first++) {
+                insertStore(*first);
+            }
+        }
+
+        size_type       erase(const key_type& k) {
+            if(eraseStore(k)){
+                updateLeafParent();
+                _size--;
+                return 1;
+            }
+            return 0;
+        }
+
+        void erase( iterator pos )
+        {
+            if(eraseStore(pos->first)){
+                updateLeafParent();
+                _size--;
+            }
+        }
+
+        void erase( iterator first, iterator last )
+        {
+            iterator temp = first;
+            while(first != last)
+            {
+                first++;
+                if(eraseStore(temp->first)){
+                    _size--;
+                }
+                temp = first;
+            }
+        }
+
+        iterator        find(const key_type& x) {
             node_pointer current = _root;
             while(current && current->data) {
                 if(x == current->data->first)
@@ -194,8 +243,7 @@ namespace ft {
             }
             return end();
         };
-
-        const_iterator   find(const key_type& x) const {
+        const_iterator  find(const key_type& x) const {
             node_pointer current = _root;
             while(current && current->data) {
                 if(x == current->data->first)
@@ -208,7 +256,7 @@ namespace ft {
             }
             return end();
         };
-        iterator lower_bound (const key_type& key)
+        iterator        lower_bound (const key_type& key)
         {
             iterator it = this->begin();
             iterator end = this->end();
@@ -216,8 +264,7 @@ namespace ft {
                 it++;
             return (it);
         }
-
-        const_iterator lower_bound (const key_type& key) const
+        const_iterator  lower_bound (const key_type& key) const
         {
             const_iterator it = this->begin();
             const_iterator end = this->end();
@@ -225,8 +272,7 @@ namespace ft {
                 it++;
             return (it);
         }
-
-        iterator upper_bound (const key_type& key)
+        iterator        upper_bound (const key_type& key)
         {
             iterator it = this->begin();
             iterator end = this->end();
@@ -234,8 +280,7 @@ namespace ft {
                 it++;
             return (it);
         }
-
-        const_iterator upper_bound (const key_type& key) const
+        const_iterator  upper_bound (const key_type& key) const
         {
             const_iterator it = begin();
             const_iterator end = end();
@@ -243,19 +288,18 @@ namespace ft {
                 it++;
             return (it);
         }
-        key_compare key_comp() const
+        key_compare     key_comp() const
         {
             return (_cmp);
         }
-        value_compare value_comp() const
+        value_compare   value_comp() const
         {
             return value_compare(_cmp);
         }
-        pair<iterator,iterator> equal_range (const key_type& key)
+        pair<iterator,iterator>             equal_range (const key_type& key)
         {
             return (ft::make_pair(lower_bound(key), upper_bound(key)));
         }
-
         pair<const_iterator,const_iterator> equal_range (const key_type& key) const
         {
             return (ft::make_pair(lower_bound(key), upper_bound(key)));
@@ -305,23 +349,26 @@ namespace ft {
             n = this->findPointer(key);
             return (n->data->second);
         }
+        void            clear(void)
+        {
+            erase(this->begin(), this->end());
+        }
 
     private:
-        node_pointer    	_root;
-        node_pointer        _leaf;
-        size_type			_size;
-        node_allocator_type _node_allocator;
-        allocator_type      _allocator;
-        key_compare         _cmp;
+        node_pointer    	    _root;
+        node_pointer            _leaf;
+        size_type			    _size;
+        node_allocator_type     _node_allocator;
+        allocator_type          _allocator;
+        key_compare             _cmp;
 
-        void    updateLeafParent(){
+        void            updateLeafParent(){
             node_pointer tmp = _root;
             while(tmp && tmp->right && tmp->right->data) {
                 tmp = tmp->right;
             }
             _leaf->parent = tmp;
         }
-
         node_pointer    findPointer(const key_type& x) {
             node_pointer current = _root;
             while(current != NULL && current->data && current->data->first) {
@@ -624,15 +671,15 @@ namespace ft {
             _node_allocator.destroy(node);
             _node_allocator.deallocate(node,1);
         }
-        void            insertStore(const value_type& x) {
+        iterator        insertStore(const value_type& x) {
             if(findPointer(x.first) != _leaf) {
-                return;
+                return (iterator(_leaf, _leaf,_leaf));
             }
             if(this->empty()) {
                 _root = createNode(x, _root);
                 _root->color = NODE_COLOR_BLACK;
                 _size++;
-                return;
+                return (iterator(_leaf, _leaf,_leaf));
             }
             _size++;
             node_pointer place = insertEntry(x);
@@ -675,9 +722,11 @@ namespace ft {
                     }
                 }
                 place = balanceInsert(insertCase,place);
-                if(insertCase == 60 || insertCase == 61 || insertCase == 50 || insertCase == 51)
-                    return;
+                if(insertCase == 60 || insertCase == 61 || insertCase == 50 || insertCase == 51) {
+                    iterator(_leaf, _leaf, _leaf);
+                }
             }
+            return(iterator(place, this->begin().getPtr(),_leaf));
         }
         node_pointer    getSuccessor(node_pointer node) {
             node_pointer succ;
@@ -719,9 +768,9 @@ namespace ft {
             }
             return blackDeleted;
         }
-        void            eraseStore(const key_type& k) {
+        bool            eraseStore(const key_type& k) {
             if(findPointer(k) == _leaf) {
-                return;
+                return false;
             }
             node_pointer node = findPointer(k);
             // erase root no child
@@ -729,13 +778,13 @@ namespace ft {
                 deleteNode(node);
                 deleteMeFromParent(node);
                 _root = NULL;
-                return;
+                return true;
             }
             // erase non-root red
             else if(node->color == NODE_COLOR_RED && (node->left == _leaf && node->right == _leaf)) {
                 deleteNode(node);
                 deleteMeFromParent(node);
-                return;
+                return true;
             }
             // erase root one red child
             else if((node->left == _leaf && node->right != _leaf) || (node->left != _leaf && node->right == _leaf)) {
@@ -766,14 +815,14 @@ namespace ft {
                     if(deletedBlack) {
                         balanceDelete(balanceStart);
                     }
-            } else {
             }
+            return true;
         }
         void            balanceDelete(node_pointer node) {
             while(node != NULL) {
                 int deleteCase = 0;
-                if (node->data.first) {
-                }
+//                if (node->data->first) {
+//                }
                 if(node->getSibling() && node->getSibling()->color) {
                     deleteCase = 3;
                 } else if (node->getDistantNepfew() && node->getDistantNepfew()->color) {
@@ -794,16 +843,16 @@ namespace ft {
                 node = deleteBalanceLevel(node, deleteCase);
             }
         }
-        node_pointer           deleteCase1(node_pointer node) {
+        node_pointer    deleteCase1(node_pointer node) {
             node->getSibling()->color = NODE_COLOR_RED;
             return node->parent;
         }
-        node_pointer           deleteCase4(node_pointer node){
+        node_pointer    deleteCase4(node_pointer node){
             node->getSibling()->color = NODE_COLOR_RED;
             node->getParent()->color = NODE_COLOR_BLACK;
             return NULL;
         }
-        node_pointer           deleteCase5(node_pointer node){
+        node_pointer    deleteCase5(node_pointer node){
 //            std::cout << "5!!!" << node->parent->data.first << "\n";
             node_pointer s = node->getSibling();
             node_pointer c = node->getCloseNepfew();
@@ -817,7 +866,7 @@ namespace ft {
             c->color = NODE_COLOR_BLACK;
             return deleteCase6(node);
         }
-        node_pointer           deleteCase6(node_pointer node){
+        node_pointer    deleteCase6(node_pointer node){
 //            std::cout << "6!!!" << node->parent->data.first << "\n";
                 node->getSibling()->color = node->getParent()->color;
                 node->getParent()->color = NODE_COLOR_BLACK;
@@ -829,7 +878,7 @@ namespace ft {
                 rotateRight(node->parent);
             return NULL;
         }
-        node_pointer           deleteBalanceLevel(node_pointer  node, int deleteCase){
+        node_pointer    deleteBalanceLevel(node_pointer  node, int deleteCase){
             switch (deleteCase) {
                 case 0 : {
                     return NULL;
