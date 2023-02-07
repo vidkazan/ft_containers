@@ -155,31 +155,31 @@ int main(void)
 		assert(og_map.size() == my_map.size());
 	}
 
-//	{
-//		test_name("Testing method swap()");
-//		std::string imaginary_months[4] ={	"Confusion",
-//											"More Confusion",
-//											"Endless Confusion",
-//											"Confusion Ended"};
-//		ft::map<int, std::string> my_second_map;
-//		std::map<int, std::string> og_second_map;
-//
-//		for(int i = 1; i < 5; i++)
-//		{
-//			og_second_map.insert(std::make_pair(i, imaginary_months[i - 1]));
-//			my_second_map.insert(ft::make_pair(i, imaginary_months[i - 1]));
-//		}
-//		for (size_t i = 1; i <= 12; i++)
-//		{
-//			my_map.insert(ft::make_pair(i, months[i - 1]));
-//			og_map.insert(std::make_pair(i, months[i - 1]));
-//		}
-//		og_map.swap(og_second_map);
-//		my_map.swap(my_second_map);
-//		assert(og_map.at(1) == my_map.at(1));
-//		assert(og_map.at(4) == my_map.at(4));
-//		assert(og_second_map.at(1) == my_second_map.at(1));
-//		assert(og_second_map.at(8) == my_second_map.at(8));
-//		std::cout << COLOUR_DEFAULT;
-//	}
+	{
+		test_name("Testing method swap()");
+		std::string imaginary_months[4] ={	"Confusion",
+											"More Confusion",
+											"Endless Confusion",
+											"Confusion Ended"};
+		ft::map<int, std::string> my_second_map;
+		std::map<int, std::string> og_second_map;
+
+		for(int i = 1; i < 5; i++)
+		{
+			og_second_map.insert(std::make_pair(i, imaginary_months[i - 1]));
+			my_second_map.insert(ft::make_pair(i, imaginary_months[i - 1]));
+		}
+		for (size_t i = 1; i <= 12; i++)
+		{
+			my_map.insert(ft::make_pair(i, months[i - 1]));
+			og_map.insert(std::make_pair(i, months[i - 1]));
+		}
+		og_map.swap(og_second_map);
+		my_map.swap(my_second_map);
+		assert(og_map.at(1) == my_map.at(1));
+		assert(og_map.at(4) == my_map.at(4));
+		assert(og_second_map.at(1) == my_second_map.at(1));
+		assert(og_second_map.at(8) == my_second_map.at(8));
+		std::cout << COLOUR_DEFAULT;
+	}
 }

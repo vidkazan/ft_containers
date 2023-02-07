@@ -99,7 +99,7 @@ class map
 		return(*this);
 	}
 
-x	///DECONSTRUCTION
+	///DECONSTRUCTION
 	~map(void)
 	{
 		clear();
@@ -262,7 +262,6 @@ x	///DECONSTRUCTION
 		return (tree.getComp().comp);
 	}
 
-	///LOOKUP
 	///LOOKUP
 	size_type count( const Key& key ) const
 	{

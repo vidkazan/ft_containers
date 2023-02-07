@@ -353,8 +353,13 @@ namespace ft {
         {
             erase(this->begin(), this->end());
         }
+        void swap (map& x) {
+            map tmp = x;
+            x = *this;
+            *this = tmp;
+        }
 
-    private:
+            private:
         node_pointer    	    _root;
         node_pointer            _leaf;
         size_type			    _size;
