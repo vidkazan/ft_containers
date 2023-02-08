@@ -64,9 +64,8 @@ namespace ft {
         allocator_type  get_allocator() const;
         iterator        insert(iterator position, const value_type &val);
         void            insert(iterator position, size_type n, const value_type &val);
-        template<class InputIterator>
-        typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type *
-                        insert(iterator position,InputIterator first,InputIterator last);
+		template<class InputIterator>
+		void 			insert(iterator position,InputIterator first,InputIterator last,typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type* = 0);
         size_type       max_size() const;
         vector&         operator=(const vector &rhs);
         reference       operator[](size_type n);
@@ -135,7 +134,7 @@ namespace ft {
     template<class T, class Alloc>
     vector<T, Alloc>::vector(size_type count, const value_type &val,const allocator_type &alloc)
         :
-        _size(count),_alloc(alloc),_capacity(count)
+        _alloc(alloc),_capacity(count),_size(count)
     {
         _vector = _alloc.allocate(_capacity);
         for (size_type i = 0; i < _size; i++) {
@@ -151,7 +150,7 @@ namespace ft {
                 const allocator_type &alloc,
                 typename enable_if<!is_integral<InputIterator>::value, void>::type*)
         :
-        _alloc(alloc),_size(0),_capacity(0)
+        _alloc(alloc),_capacity(0),_size(0)
 
     {
         _vector = _alloc.allocate(_capacity);
@@ -172,6 +171,13 @@ namespace ft {
     template<class T, class Alloc>
     vector<T, Alloc>::~vector()
     {
+		std::cout
+			<< "\n====================================================\n"
+			<< "obj " << this << "\n"
+			<< "alloc " << &_alloc << "\n"
+			<< "vector: " << _vector << "\n"
+				<< "vector[0]: " << &_vector[0] << "\n"
+			<< "Clearing...\n";
         this->clear();
         _alloc.deallocate(_vector, _capacity);
     }
@@ -204,7 +210,8 @@ namespace ft {
     {
         _size = n;
         _capacity = _capacity > n ? _capacity : n;
-        _alloc.allocate(_capacity);
+		_alloc.deallocate(_vector,_capacity);
+        _vector = _alloc.allocate(_capacity);
         for(size_type i=0;i<_size;i++) {
             _alloc.construct(&_vector[i], val);
         }
@@ -231,29 +238,25 @@ namespace ft {
     template<class T, class Alloc>
     typename vector<T, Alloc>::reference    vector<T, Alloc>::front()
     {
-        if(_size)
-            return _vector[0];
+		return _vector[0];
     }
 
     template<class T, class Alloc>
     typename vector<T, Alloc>::const_reference    vector<T, Alloc>::front() const
     {
-        if(_size)
-            return _vector[0];
+		return _vector[0];
     }
 
     template<class T, class Alloc>
     typename vector<T, Alloc>::reference    vector<T, Alloc>::vector<T, Alloc>::back()
     {
-        if(_size)
-            return _vector[_size-1];
+		return _size ? _vector[_size-1] : _vector[0];
     }
 
     template<class T, class Alloc>
     typename vector<T, Alloc>::const_reference    vector<T, Alloc>::back() const
     {
-        if(_size)
-            return _vector[_size-1];
+		return _size ? _vector[_size-1] : _vector[0];
     }
 
     template<typename T, typename Alloc>
@@ -385,19 +388,14 @@ namespace ft {
         if (_size + n > _capacity)
         {
             if (_size == 0) {
-    //                    std::cout << " new capacity = 1 " << " -> ";
                 new_capacity = 1;
             } else {
                 new_capacity = _capacity * 2;
-    //                    std::cout << " new capacity * 2 = " << new_capacity << " -> ";
-    //                    std::cout << " new capacity * 2 = " << new_capacity << " -> ";
             }
             if (new_capacity < _size + n) {
                 new_capacity = _size + n;
-    //                    std::cout << " new capacity = " << new_capacity;
             }
             this->reserve(new_capacity);
-    //                std::cout << " new capacity = " << new_capacity;
         }
         mv_source = this->end() - 1;
         mv_dest = mv_source + n;
@@ -420,8 +418,7 @@ namespace ft {
 
     template<typename T, typename Alloc>
     template <class InputIterator>
-    typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type*
-    vector<T, Alloc>::insert (iterator position, InputIterator first, InputIterator last)
+    void	vector<T, Alloc>::insert (iterator position, InputIterator first, InputIterator last,typename ft::enable_if<!ft::is_integral<InputIterator>::value, void>::type*)
     {
 
         size_type n = last - first;
@@ -505,6 +502,7 @@ namespace ft {
         for (size_type i = 0; i < _size; i++) {
             _alloc.construct(&_vector[i], rhs[i]);
         }
+		return *this;
     }
 
     template<typename T, typename Alloc>
@@ -531,7 +529,6 @@ namespace ft {
     {
         if((_size + 1) > _capacity)
         {
-    //                std::cout << "reserving " << _capacity * 1.5 <<"\n";
             _capacity ? reserve(((int)(_capacity) * 2)) : reserve((1));
         }
         _alloc.construct(&_vector[_size],val);
@@ -635,8 +632,7 @@ namespace ft {
             _alloc.construct(&newVector[i], _vector[i]);
             _alloc.destroy(&_vector[i]);
         }
-        if(_capacity)
-            _alloc.deallocate(_vector, _capacity);
+		_alloc.deallocate(_vector, _capacity);
         _vector = newVector;
         _capacity = n;
     }

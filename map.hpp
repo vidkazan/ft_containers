@@ -3,13 +3,12 @@
 //
 #pragma once
 #include "utils.hpp"
-#include <iomanip>
 #include <iostream>
 #include "./map_iterator.hpp"
+#include "./pair.hpp"
 #include "./reverse_iterator.hpp"
 
 namespace ft {
-    // Map node
     template <class T>
     struct node{
             typedef ft::node<T>     node_type;
@@ -29,16 +28,11 @@ namespace ft {
                 , right(NULL)
                 , parent(NULL) {};
             node_pointer getParent() { return parent; }
-//            value_type getValue(){
-//                return data;
-//            }
             node_pointer getSibling(){
             if(this->parent) {
                 if(parent->left == this) {
-//                    std::cout << "getSibling " << this << " : p " << parent->data.first << " : l " << parent->left->data.first << " : r " << parent->right->data.first << " : s " << parent->right->data.first << "\n";
                     return parent->right;
                 } else {
-//                    std::cout << "getSibling " << this << " p " << parent->data.first << " : l " << parent->left->data.first << " : r " << parent->right->data.first << " : s " << parent->left->data.first << "\n";
                     return parent->left;
                 }
             }
@@ -165,7 +159,6 @@ namespace ft {
         }
 
         allocator_type          get_allocator() const {return _allocator;}
-        /// capacity
         bool                    empty() const {
             if(_root != NULL)
                 return false;
@@ -358,14 +351,33 @@ namespace ft {
             x = *this;
             *this = tmp;
         }
+        reverse_iterator rbegin(void)
+        {
+            return reverse_iterator(this->end());
+        }
 
-            private:
-        node_pointer    	    _root;
-        node_pointer            _leaf;
-        size_type			    _size;
-        node_allocator_type     _node_allocator;
-        allocator_type          _allocator;
-        key_compare             _cmp;
+        const_reverse_iterator rbegin(void) const
+        {
+            return const_reverse_iterator(this->end());
+        }
+
+        reverse_iterator rend(void)
+        {
+            return reverse_iterator(this->begin());
+        }
+
+        const_reverse_iterator rend(void) const
+        {
+            return const_reverse_iterator(this->begin());
+        }
+
+        private:
+            node_pointer    	    _root;
+            node_pointer            _leaf;
+            size_type			    _size;
+            node_allocator_type     _node_allocator;
+            allocator_type          _allocator;
+            key_compare             _cmp;
 
         void            updateLeafParent(){
             node_pointer tmp = _root;
@@ -400,7 +412,7 @@ namespace ft {
             }
             return _leaf;
         };
-        void            swap_4_replacing_in_children(node_pointer a, node_pointer b, node_pointer ap, node_pointer bp) {
+        void            swap_4_replacing_in_children(node_pointer a, node_pointer b) {
             a->left->parent = a;
             a->right->parent = a;
             b->left->parent = b;
@@ -517,7 +529,6 @@ namespace ft {
             }
         }
         void            swap(node_pointer a, node_pointer b){
-//            std::cout <<"swap: "<< a->data.first << " " << b->data.first << "\n";
             node_pointer ap,bp;
             ap = a->parent;
             bp = b->parent;
@@ -735,8 +746,6 @@ namespace ft {
         }
         node_pointer    getSuccessor(node_pointer node) {
             node_pointer succ;
-
-
             if (node->right && node->right != _leaf) {
                 succ = node->right;
                 while (succ->left && succ->left != _leaf) {
@@ -798,7 +807,6 @@ namespace ft {
                     swap(node, node->left);
                     replaceMeFromParent(node, node->left);
                 } else {
-//                    std::cout << node << " " << node->right << "\n";
                     swap(node, node->right);
                     replaceMeFromParent(node, node->right);
                 }
@@ -807,7 +815,6 @@ namespace ft {
             } else if(node->color == NODE_COLOR_BLACK && (node->left == _leaf && node->right == _leaf)) {
                     _leaf->parent = node->parent;
                     node_pointer startBalance = _leaf;
-//                    std::cout << "startBalance: " << startBalance->data.first << "\n";
                     deleteMeFromParent(node);
                     deleteNode(node);
                     balanceDelete(startBalance);
@@ -826,8 +833,6 @@ namespace ft {
         void            balanceDelete(node_pointer node) {
             while(node != NULL) {
                 int deleteCase = 0;
-//                if (node->data->first) {
-//                }
                 if(node->getSibling() && node->getSibling()->color) {
                     deleteCase = 3;
                 } else if (node->getDistantNepfew() && node->getDistantNepfew()->color) {
@@ -843,7 +848,6 @@ namespace ft {
                 // erase black non-root case 2 // is root
                 } else if (!node->parent) {
                     deleteCase = 2;
-                    // erase black non-root case 6 // 1-2-3-4-5-6-7-8-9-666 erase 1
                 }
                 node = deleteBalanceLevel(node, deleteCase);
             }

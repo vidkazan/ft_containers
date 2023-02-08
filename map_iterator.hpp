@@ -1,5 +1,6 @@
 #pragma once
 #include "./utils.hpp"
+#include "./pair.hpp"
 #include <stdint.h>
 #include <cstddef>
 
