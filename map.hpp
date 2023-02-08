@@ -139,22 +139,17 @@ namespace ft {
 			return (_node_allocator.max_size());
 		};
         pair<iterator, bool>    insert(const value_type& x) {
-			// std::cout << "insert" << x.first << "\n";
-            node_pointer p = findPointer(x.first);
-            if (p == _leaf) {
-				// std::cout << "to insert store" << x.first << "\n";
-                pair<iterator,bool> res = ft::make_pair(insertStore(x), true);
-				// std::cout << "inserted" << res.first.getPtr() << "\n";
-                updateLeafParent();
-                return (res);
-            }
-            return(ft::make_pair(insertStore(x), false));
+			pair<iterator,bool> res = insertStore(x);
+			updateLeafParent();
+			return res;
         }
 
         iterator insert (iterator position, const value_type& value)
         {
             static_cast<void>(position);
-            return (insertStore(value));
+			pair<iterator,bool> res = insertStore(value);
+			updateLeafParent();
+			return res.first;
         }
 
         template< class InputIt >
@@ -163,6 +158,7 @@ namespace ft {
             for (; first != last; first++) {
                 insertStore(*first);
             }
+			updateLeafParent();
         }
 
         size_type       erase(const key_type& k) {
@@ -688,17 +684,19 @@ namespace ft {
             _node_allocator.destroy(node);
             _node_allocator.deallocate(node,1);
         }
-        iterator        insertStore(const value_type& x) {
+        ft::pair<iterator,bool>	insertStore(const value_type& x) {
 			// std::cout << "insert store" << x.first << "\n";
+			node_pointer p = findPointer(x.first);
             if(findPointer(x.first) != _leaf) {
-                return (iterator(_leaf, _leaf,_leaf));
+//				_allocator.destroy(p->data);
+//				_allocator.construct(p->data,x);
+                return (ft::make_pair<iterator,bool>(iterator(p, this->begin().getPtr(),_leaf), false));
             }
             if(this->empty()) {
                 _root = createNode(x, NULL);
                 _root->color = NODE_COLOR_BLACK;
                 _size++;
-				// std::cout << "inserting!" << _root->data->first << "\n";
-                return (iterator(_root, _root,_leaf));
+				return (ft::make_pair<iterator,bool>(iterator(_root, _root,_leaf), true));
             }
             _size++;
             node_pointer place = insertEntry(x);
@@ -743,10 +741,10 @@ namespace ft {
                 }
                 place = balanceInsert(insertCase,place);
                 if(insertCase == 60 || insertCase == 61 || insertCase == 50 || insertCase == 51) {
-					return (iterator(res, this->begin().getPtr(), _leaf));
+					return (ft::make_pair<iterator,bool>(iterator(res, this->begin().getPtr(),_leaf), true));
                 }
             }
-            return(iterator(res, this->begin().getPtr(),_leaf));
+			return (ft::make_pair<iterator,bool>(iterator(res, this->begin().getPtr(),_leaf), true));
         }
         node_pointer    getSuccessor(node_pointer node) {
             node_pointer succ;

@@ -8,58 +8,38 @@ int main(int argc, char** argv) {
 	std::ostringstream	ss;
 
 	ft::map<int, int>	A;
-	A.insert(ft::make_pair(4, 0));
-	A.insert(ft::make_pair(2, -2));
-	A.insert(ft::make_pair(6, 2));
-	A.insert(ft::make_pair(3, -1));
-	A.insert(ft::make_pair(5, 1));
-	A.insert(ft::make_pair(1, -3));
+	A.insert(ft::make_pair(0, 0));
+	A.insert(ft::make_pair(-2, -2));
+	A.insert(ft::make_pair(2, 2));
+	A.insert(ft::make_pair(-1, -1));
+	A.insert(ft::make_pair(1, 1));
+	A.insert(ft::make_pair(-3, -3));
+	A.insert(ft::make_pair(3, 3));
+	A.insert(ft::make_pair(-4, -4));
+	A.insert(ft::make_pair(4, 4));
+	ss << " " << A.size() << " ";
+	for (ft::map<int, int>::iterator first = A.begin(); first != A.end(); ++first)
+		ss << " " << first->second;
+	ft::map<int, int>::iterator	it1;
+	ft::map<int, int>::iterator	it2;
+	it1 = A.find(-1);
+	it2 = A.find(1);
+	A.erase(it1, it2);
+	for (ft::map<int, int>::iterator first = A.begin(); first != A.end(); ++first)
+		ss << " " << first->second;
+	ss << " " << A.size() << " ";
+	A.erase(A.find(-2));
+	A.erase(A.find(2));
+	for (ft::map<int, int>::iterator first = A.begin(); first != A.end(); ++first)
+		ss << " " << first->second;
+	ss << " " << A.size() << " ";
+	A.erase(A.find(-3));
+	A.erase(A.find(4));
+	for (ft::map<int, int>::iterator first = A.begin(); first != A.end(); ++first)
+		ss << " " << first->second;
 	ss << " " << A.size();
-	ft::pair<ft::map<int, int>::iterator, bool>	res;
-	res = A.insert(ft::make_pair(7, 3));
-	ss << " " << res.second;
-	ss << " " << res.first->second;
+	A.clear();
 	ss << " " << A.size();
-	res = A.insert(ft::pair<int, int>(6, 8));
-	ss << " " << res.second;
-	ss << " " << res.first->second;
-	ss << " " << A.size();
-	ft::map<int, int>	B;
-	B.insert(ft::pair<int, int>(1, 100));
-	B.insert(ft::pair<int, int>(-1, -100));
-	B.insert(ft::pair<int, int>(2, 200));
-	ft::map<int, int>::iterator	it5;
-	it5 = B.insert(B.begin(), ft::pair<int, int>(3, 300));
-	ss << " " << it5->first;
-	it5 = B.insert(B.begin(), ft::pair<int, int>(3, 300));
-	ss << " " << it5->first;
-	it5 = B.insert(B.end(), ft::pair<int, int>(-30, -3000));
-	ss << " " << it5->first;
-	it5 = B.insert(B.end(), ft::pair<int, int>(-30, -3000));
-	ss << " " << it5->first;
-	it5 = B.insert(--B.end(), ft::pair<int, int>(-2, -200));
-	ss << " " << it5->first;
-	it5 = B.insert(--B.end(), ft::pair<int, int>(-2, -200));
-	ss << " " << it5->first;
-	it5 = B.insert(++(++B.begin()), ft::pair<int, int>(-8, -800));
-	ss << " " << it5->first;
-	it5 = B.insert(++(++B.begin()), ft::pair<int, int>(-8, -800));
-	ss << " " << it5->first;
-	it5 = B.insert(--(--(--B.end())), ft::pair<int, int>(1000, 100000));
-	ss << " " << it5->first;
-	it5 = B.insert(--(--(--B.end())), ft::pair<int, int>(1000, 100000));
-	ss << " " << it5->first;
-	it5 = B.insert(--(--(--B.end())), ft::pair<int, int>(1000, 100000));
-	ss << " " << it5->first << ",";
-	for (ft::map<int, int>::iterator it = B.begin(); it != B.end(); ++it)
-		ss << " " << it->second;
-	ss << " " << B.size();
-	ft::map<int, int>::iterator it10 = A.begin();
-	ft::map<int, int>::iterator it11 = A.end();
-	B.insert(it10, it11);
-	for (ft::map<int, int>::iterator it = B.begin(); it != B.end(); ++it)
-		ss << " " << it->second;
-	ss << " " << B.size();
-	B.clear();
-	ss << " " << B.size();
+
+
 }
