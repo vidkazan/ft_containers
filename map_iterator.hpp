@@ -264,9 +264,20 @@ namespace ft
     bool operator==(const const_MapIterator<node_type> &it1, const MapIterator<node_type> &it2)
     {return (it1.getPtr() == it2.getPtr());}
 
+	template< class node_type>
+	bool operator==(const MapIterator<node_type> &it1, const const_MapIterator<node_type> &it2)
+	{return (it1.getPtr() == it2.getPtr());}
+
     template< class node_type>
     bool operator==(const const_MapIterator<node_type> &it1, const const_MapIterator<node_type> &it2)
     {return (it1.getPtr() == it2.getPtr());}
+
+
+
+
+
+
+
 
     template< class node_type>
     bool operator!=(const MapIterator<node_type> &it1, const MapIterator<node_type> &it2)
@@ -279,4 +290,8 @@ namespace ft
     template< class node_type>
     bool operator!=(const MapIterator<node_type> &it1, const const_MapIterator<node_type> &it2)
     {return (it1.getPtr() != it2.getPtr());}
+
+	template< class node_type>
+	bool operator!=(const const_MapIterator<node_type> &it1, const MapIterator<node_type> &it2)
+	{return (it1.getPtr() != it2.getPtr());}
 }

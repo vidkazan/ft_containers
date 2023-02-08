@@ -702,6 +702,7 @@ namespace ft {
             }
             _size++;
             node_pointer place = insertEntry(x);
+			node_pointer res = place;
             int         insertCase = 0;
             while(place != NULL) {
                 if(place->parent \
@@ -742,10 +743,10 @@ namespace ft {
                 }
                 place = balanceInsert(insertCase,place);
                 if(insertCase == 60 || insertCase == 61 || insertCase == 50 || insertCase == 51) {
-                    iterator(_leaf, _leaf, _leaf);
+					return (iterator(res, this->begin().getPtr(), _leaf));
                 }
             }
-            return(iterator(place, this->begin().getPtr(),_leaf));
+            return(iterator(res, this->begin().getPtr(),_leaf));
         }
         node_pointer    getSuccessor(node_pointer node) {
             node_pointer succ;
