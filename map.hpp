@@ -21,49 +21,12 @@ namespace ft {
             node_type*  right;
             node_type*  parent;
 
-            node(value_type value)
+            node(value_type* value)
                 : data(value)
                 , color(NODE_COLOR_BLACK)
                 , left(NULL)
                 , right(NULL)
                 , parent(NULL) {};
-            node_pointer getParent() { return parent; }
-            node_pointer getSibling(){
-            if(this->parent) {
-                if(parent->left == this) {
-                    return parent->right;
-                } else {
-                    return parent->left;
-                }
-            }
-            return NULL;
-        }
-            node_pointer getCloseNepfew() {
-                if(!getSibling()) {
-                    return NULL;
-                }
-                return isLeft() ? getSibling()->left : getSibling()->right;
-            }
-            node_pointer getDistantNepfew() {
-                if(!getSibling()) {
-                    return NULL;
-                }
-                return isLeft() ? getSibling()->right : getSibling()->left;
-            }
-            node_pointer getGrandfather(){
-                if(parent && parent->parent)
-                    return parent->parent;
-                return NULL;
-            }
-            node_pointer getUncle(){
-                if(!parent || !parent->parent)
-                    return NULL;
-                if(parent->data->first < parent->parent->data->first) {
-                    return parent->parent->right;
-                } else {
-                    return parent->parent->left;
-                }
-            }
             bool isRight() {
                 if(!parent)
                     return false;
@@ -141,14 +104,19 @@ namespace ft {
         map(const map& x) {
             *this = x;
         }
-        ~map() {};
+        ~map() {
+			// std::cout << "destructor\n";
+			this->clear();
+			_leaf->parent = NULL;
+			_node_allocator.destroy(_leaf);
+			_node_allocator.deallocate(_leaf,1);
+			_leaf = NULL;
+		};
 
         template <class InputIterator>
         map (
                 InputIterator first,
-                InputIterator last,
-                const key_compare& comp = key_compare(),
-                const allocator_type& alloc = allocator_type()
+                InputIterator last
         ) : _root(NULL), _size(0) {
             createLeafNode();
             while(first != last)
@@ -167,12 +135,16 @@ namespace ft {
         size_type               size() const{
             return _size;
         };
-        size_type               max_size() const{};
-
+        size_type               max_size() const{
+			return (_node_allocator.max_size());
+		};
         pair<iterator, bool>    insert(const value_type& x) {
+			// std::cout << "insert" << x.first << "\n";
             node_pointer p = findPointer(x.first);
             if (p == _leaf) {
+				// std::cout << "to insert store" << x.first << "\n";
                 pair<iterator,bool> res = ft::make_pair(insertStore(x), true);
+				// std::cout << "inserted" << res.first.getPtr() << "\n";
                 updateLeafParent();
                 return (res);
             }
@@ -216,6 +188,8 @@ namespace ft {
             while(first != last)
             {
                 first++;
+				// std::cout << "to erase : " << temp.getPtr() << "\n";
+				// std::cout << "to erase: " << _root << " " << _root->data << " " << _root->data->first << "\n";
                 if(eraseStore(temp->first)){
                     _size--;
                 }
@@ -226,9 +200,9 @@ namespace ft {
         iterator        find(const key_type& x) {
             node_pointer current = _root;
             while(current && current->data) {
-                if(x == current->data->first)
+				if(isEqualKeys(x,current->data->first))
                     return iterator(current, this->begin().getPtr(), _leaf);
-                if(x < current->data->first) {
+                if(isLessKey(x, current->data->first)) {
                     current = current->left;
                 } else {
                     current = current->right;
@@ -239,9 +213,9 @@ namespace ft {
         const_iterator  find(const key_type& x) const {
             node_pointer current = _root;
             while(current && current->data) {
-                if(x == current->data->first)
+                if(isEqualKeys(x,current->data->first))
                     return const_iterator(current, this->begin().getPtr(), _leaf);
-                if(x < current->data->first) {
+                if(isLessKey(x, current->data->first)) {
                     current = current->left;
                 } else {
                     current = current->right;
@@ -304,6 +278,9 @@ namespace ft {
             return (1);
         }
         iterator        begin(){
+			if(!_root){
+				return iterator(_leaf,_leaf,_leaf);
+			}
             node_pointer node = this->_root;
             while(node->left != _leaf){
                 node = node->left;
@@ -311,6 +288,9 @@ namespace ft {
             return iterator(node,node,_leaf);
         }
         const_iterator  begin() const{
+			if(!_root){
+				return iterator(_leaf,_leaf,_leaf);
+			}
             node_pointer node = this->_root;
             while(node->left != _leaf){
                 node = node->left;
@@ -318,6 +298,9 @@ namespace ft {
             return const_iterator(node,node,_leaf);
         }
         iterator        end(){
+			if(!_root){
+				return iterator(_leaf,_leaf,_leaf);
+			}
             node_pointer node = this->_root;
             while(node->left != _leaf){
                 node = node->left;
@@ -325,6 +308,9 @@ namespace ft {
             return iterator(_leaf,node,_leaf);
         }
         const_iterator  end() const {
+			if(!_root){
+				return iterator(_leaf,_leaf,_leaf);
+			}
             return const_iterator(_leaf, this->begin().getPtr(),_leaf);
         }
         mapped_type     at(const Key &key)
@@ -344,7 +330,7 @@ namespace ft {
         }
         void            clear(void)
         {
-            erase(this->begin(), this->end());
+			erase(this->begin(), this->end());
         }
         void swap (map& x) {
             map tmp = x;
@@ -387,33 +373,37 @@ namespace ft {
             _leaf->parent = tmp;
         }
         node_pointer    findPointer(const key_type& x) {
-            node_pointer current = _root;
-            while(current != NULL && current->data && current->data->first) {
-                if(x == current->data->first)
-                    return current;
-                if(x < current->data->first) {
-                    current = current->left;
-                } else {
-                    current = current->right;
-                }
-            }
-            return _leaf;
+			node_pointer current = _root;
+			while(current && current->data) {
+//				std::cout << "findPointer loop: " << current << " " << current->data << " " << current->data->first << " " << x << "\n";
+				if(isEqualKeys(x, current->data->first)) {
+					return current;
+				}
+				if(isLessKey(x,current->data->first)) {
+					current = current->left;
+				} else {
+					current = current->right;
+				}
+			}
+			return _leaf;
         };
         node_pointer    findPointer(const key_type& x) const {
-            node_pointer current = _root;
-            while(current != NULL && current->data && current->data->first) {
-                if(x == current->data->first)
-                    return current;
-                if(x < current->data->first) {
-                    current = current->left;
-                } else {
-                    current = current->right;
-                }
-            }
-            return _leaf;
+			node_pointer current = _root;
+			while(current && current->data) {
+//				std::cout << "findPointer loop: " << current << " " << current->data << " " << current->data->first << " " << x << "\n";
+				if(isEqualKeys(x, current->data->first)) {
+					return current;
+				}
+				if(isLessKey(x,current->data->first)) {
+					current = current->left;
+				} else {
+					current = current->right;
+				}
+			}
+			return _leaf;
         };
         void            swap_4_replacing_in_children(node_pointer a, node_pointer b) {
-            a->left->parent = a;
+			a->left->parent = a;
             a->right->parent = a;
             b->left->parent = b;
             b->right->parent = b;
@@ -536,7 +526,7 @@ namespace ft {
 
             swap_2_replacing_parents(a,b,ap,bp);
             swap_3_replacing_children(a,b,ap,bp);
-            swap_4_replacing_in_children(a,b,ap,bp);
+            swap_4_replacing_in_children(a,b);
             ft::swap(a->color,b->color);
         }
         void            deleteMeFromParent(node_pointer me){
@@ -576,20 +566,25 @@ namespace ft {
 
             node->data = _allocator.allocate(1);
             _allocator.construct(node->data,x);
+//			std::cout
+//					<< "created: " << node->data->first << " / " << node->data << " + " << node << "\n";
             return node;
         }
         node_pointer    insertEntry(const value_type& x) {
+			// std::cout << "insert entry " << x.first << "\n";
             node_pointer current = _root;
             node_pointer previous = _root->parent;
             while(current != _leaf) {
                 previous = current;
-                if(x.first < current->data->first) {
+				if(isLessKey(x.first,current->data->first)) {
+//                if(x.first < current->data->first) {
                     current = current->left;
                 } else {
                     current = current->right;
                 }
             }
-            if(previous->data->first > x.first){
+			if(isBiggerKey(previous->data->first, x.first)) {
+//            if(previous->data->first > x.first){
                 previous->left = createNode(x, previous);
                 return previous->left;
             } else {
@@ -647,9 +642,9 @@ namespace ft {
                     return NULL;
                 }
                 case 2: {
-                    node->getParent()->color       = NODE_COLOR_BLACK;
-                    node->getGrandfather()->color  = NODE_COLOR_RED;
-                    node->getUncle()->color        = NODE_COLOR_BLACK;
+                    node->parent->color       = NODE_COLOR_BLACK;
+                    getGrandfather(node)->color  = NODE_COLOR_RED;
+                    getUncle(node)->color        = NODE_COLOR_BLACK;
                     node = node->parent;
                     break;
                 }
@@ -657,7 +652,7 @@ namespace ft {
                     return NULL;
                 }
                 case 4: {
-                    node->getParent()->color = NODE_COLOR_BLACK;
+                    node->parent->color = NODE_COLOR_BLACK;
                     break;
                 }
                 case 51: {
@@ -684,31 +679,39 @@ namespace ft {
             return node->parent;
         }
         void            deleteNode(node_pointer node) {
+			// std::cout<< "freed node: " << node << " " << "\n";
+			node->parent = NULL;
+			node->left= NULL;
+			node->right= NULL;
+			_allocator.deallocate(node->data,1);
+			node->data = NULL;
             _node_allocator.destroy(node);
             _node_allocator.deallocate(node,1);
         }
         iterator        insertStore(const value_type& x) {
+			// std::cout << "insert store" << x.first << "\n";
             if(findPointer(x.first) != _leaf) {
                 return (iterator(_leaf, _leaf,_leaf));
             }
             if(this->empty()) {
-                _root = createNode(x, _root);
+                _root = createNode(x, NULL);
                 _root->color = NODE_COLOR_BLACK;
                 _size++;
-                return (iterator(_leaf, _leaf,_leaf));
+				// std::cout << "inserting!" << _root->data->first << "\n";
+                return (iterator(_root, _root,_leaf));
             }
             _size++;
             node_pointer place = insertEntry(x);
             int         insertCase = 0;
             while(place != NULL) {
-                if(place->getParent() \
-                && place->getParent()->isBlack()) {                               //  Insert case 1   Parent is BLACK
+                if(place->parent \
+                && place->parent->isBlack()) {                               //  Insert case 1   Parent is BLACK
                         insertCase = 1;
                 }
-                else if(place->getGrandfather()
-                     && place->getParent()->isRed() \
-                     && place->getUncle()->isRed() \
-                     && place->getGrandfather()->isBlack()) {                      //  Insert case 2   Parent && Uncle is RED && Grand is BLACK
+                else if(getGrandfather(place)
+                     && place->parent->isRed() \
+                     && getUncle(place)->isRed() \
+                     && getGrandfather(place)->isBlack()) {                      //  Insert case 2   Parent && Uncle is RED && Grand is BLACK
                         insertCase = 2;
                 }
                 else if((!place->parent && place->color == NODE_COLOR_RED)) {
@@ -718,12 +721,12 @@ namespace ft {
                 else if(!place->parent) {
                         insertCase = 1;
                 }
-                else if(place->getParent() && place->getParent()->isRed() && !place->getGrandfather()) { //  Insert case 4   Parent is RED && no Grand
+                else if(place->parent && place->parent->isRed() && !getGrandfather(place)) { //  Insert case 4   Parent is RED && no Grand
                         insertCase = 4;
                 }
-                else if(place->getUncle() && place->getParent()->isRed() \
-                                          && place->getUncle()->isBlack() \
-                                          && place->getGrandfather()->isBlack()) { //  Insert case 5   Parent is RED && Uncle BLACK && Grand BLACK &&
+                else if(getUncle(place) && place->parent->isRed() \
+                                          && getUncle(place)->isBlack() \
+                                          && getGrandfather(place)->isBlack()) { //  Insert case 5   Parent is RED && Uncle BLACK && Grand BLACK &&
                     if(place->isLeft()) {
                         if(place->parent->isLeft())
                             insertCase = 60;
@@ -783,10 +786,12 @@ namespace ft {
             return blackDeleted;
         }
         bool            eraseStore(const key_type& k) {
-            if(findPointer(k) == _leaf) {
+			// std::cout << "eraseStore: " << _root << " " << _root->data << " " << _root->data->first << "\n";
+			node_pointer node = findPointer(k);
+            if(node == _leaf) {
+				// std::cout << "ierase store: not found" << k << "\n";
                 return false;
             }
-            node_pointer node = findPointer(k);
             // erase root no child
             if(!node->parent && node->left == _leaf && node->right == _leaf) {
                 deleteNode(node);
@@ -796,14 +801,14 @@ namespace ft {
             }
             // erase non-root red
             else if(node->color == NODE_COLOR_RED && (node->left == _leaf && node->right == _leaf)) {
-                deleteNode(node);
                 deleteMeFromParent(node);
+                deleteNode(node);
                 return true;
             }
             // erase root one red child
             else if((node->left == _leaf && node->right != _leaf) || (node->left != _leaf && node->right == _leaf)) {
                 if (node->left != _leaf) {
-                    std::cout << node << " " << node->left << "\n";
+                    // std::cout << node << " " << node->left << "\n";
                     swap(node, node->left);
                     replaceMeFromParent(node, node->left);
                 } else {
@@ -833,17 +838,17 @@ namespace ft {
         void            balanceDelete(node_pointer node) {
             while(node != NULL) {
                 int deleteCase = 0;
-                if(node->getSibling() && node->getSibling()->color) {
+                if(getSibling(node) && getSibling(node)->color) {
                     deleteCase = 3;
-                } else if (node->getDistantNepfew() && node->getDistantNepfew()->color) {
+                } else if (getDistantNepfew(node) && getDistantNepfew(node)->color) {
                     deleteCase = 6;
-                } else if(node->getCloseNepfew() && node->getCloseNepfew()->color) {
+                } else if(getCloseNepfew(node) && getCloseNepfew(node)->color) {
                     deleteCase = 5;
                 } else if(node->parent && node->parent->color) {
                     deleteCase = 4;
-                } else if (node->parent && !node->parent->color && node->getSibling() && !node->getSibling()->color &&
-                    node->getCloseNepfew() && node->getDistantNepfew() && !node->getCloseNepfew()->color &&
-                    !node->getDistantNepfew()->color) {
+                } else if (node->parent && !node->parent->color && getSibling(node) && !getSibling(node)->color &&
+                    getCloseNepfew(node) && getDistantNepfew(node) && !getCloseNepfew(node)->color &&
+                    !getDistantNepfew(node)->color) {
                     deleteCase = 1;
                 // erase black non-root case 2 // is root
                 } else if (!node->parent) {
@@ -853,18 +858,18 @@ namespace ft {
             }
         }
         node_pointer    deleteCase1(node_pointer node) {
-            node->getSibling()->color = NODE_COLOR_RED;
+            getSibling(node)->color = NODE_COLOR_RED;
             return node->parent;
         }
         node_pointer    deleteCase4(node_pointer node){
-            node->getSibling()->color = NODE_COLOR_RED;
-            node->getParent()->color = NODE_COLOR_BLACK;
+            getSibling(node)->color = NODE_COLOR_RED;
+            node->parent->color = NODE_COLOR_BLACK;
             return NULL;
         }
         node_pointer    deleteCase5(node_pointer node){
 //            std::cout << "5!!!" << node->parent->data.first << "\n";
-            node_pointer s = node->getSibling();
-            node_pointer c = node->getCloseNepfew();
+            node_pointer s = getSibling(node);
+            node_pointer c = getCloseNepfew(node);
             if(node->isLeft()){
                 rotateRight(s);
             } else {
@@ -877,9 +882,9 @@ namespace ft {
         }
         node_pointer    deleteCase6(node_pointer node){
 //            std::cout << "6!!!" << node->parent->data.first << "\n";
-                node->getSibling()->color = node->getParent()->color;
-                node->getParent()->color = NODE_COLOR_BLACK;
-                node->getDistantNepfew()->color = NODE_COLOR_BLACK;
+                getSibling(node)->color = node->parent->color;
+                node->parent->color = NODE_COLOR_BLACK;
+                getDistantNepfew(node)->color = NODE_COLOR_BLACK;
 //            return NULL;
             if(node->isLeft())
                 rotateLeft(node->parent);
@@ -901,15 +906,15 @@ namespace ft {
                 case 3: {
 //                    std::cout << "3!!!" << node->parent->data.first << "\n";
                     node->parent->color = NODE_COLOR_RED;
-                    node->getSibling()->color = NODE_COLOR_BLACK;
+                    getSibling(node)->color = NODE_COLOR_BLACK;
                     if(node->isLeft())
                         rotateLeft(node->parent);
                     else
                         rotateRight(node->parent);
 //                    std::cout << "3!!!" << node->parent->data.first << "\n";
-                    if(node->getDistantNepfew() && node->getDistantNepfew()->color) {
+                    if(getDistantNepfew(node) && getDistantNepfew(node)->color) {
                         return deleteCase6(node);
-                    } else if(node->getCloseNepfew() && node->getCloseNepfew()->color) {
+                    } else if(getCloseNepfew(node) && getCloseNepfew(node)->color) {
                         return deleteCase5(node);
                     } else {
                         return deleteCase4(node);
@@ -927,6 +932,84 @@ namespace ft {
             }
             return NULL;
         }
+
+
+		node_pointer getSibling(node_pointer p) {
+			if(p->parent) {
+				if(p->parent->left == p) {
+					return p->parent->right;
+				} else {
+					return p->parent->left;
+				}
+			}
+			return NULL;
+		}
+		node_pointer getCloseNepfew(node_pointer p) {
+			if(!this->getSibling(p)) {
+				return NULL;
+			}
+			return p->isLeft() ? this->getSibling(p)->left : this->getSibling(p)->right;
+		}
+		node_pointer getDistantNepfew(node_pointer p) {
+			if(!getSibling(p)) {
+				return NULL;
+			}
+			return p->isLeft() ? this->getSibling(p)->right : this->getSibling(p)->left;
+		}
+		node_pointer getGrandfather(node_pointer p){
+			if(p->parent && p->parent->parent)
+				return p->parent->parent;
+			return NULL;
+		}
+		node_pointer getUncle(node_pointer p){
+			if(!p->parent || !p->parent->parent)
+				return NULL;
+			if(isLessKey(p->parent->data->first,p->parent->parent->data->first)) {
+				return p->parent->parent->right;
+			} else {
+				return p->parent->parent->left;
+			}
+		}
+
+
+
+
+		bool isEqualKeys(key_type& a, key_type& b) {
+			return (!key_comp()(a,b)  && !key_comp()(b,a));
+		}
+		bool isEqualKeys(const key_type& a, key_type& b) const {
+			return (!key_comp()(a,b)  && !key_comp()(b,a));
+		}
+		bool isEqualKeys( key_type& a,const key_type& b) const {
+			return (!key_comp()(a,b)  && !key_comp()(b,a));
+		}
+		bool isEqualKeys(const key_type& a,const key_type& b) const {
+			return (!key_comp()(a,b)  && !key_comp()(b,a));
+		}
+		bool isLessKey(key_type& a, key_type& b) {
+			return (key_comp()(a,b));
+		}
+		bool isLessKey(key_type& a,const key_type& b) const {
+			return (key_comp()(a,b));
+		}
+		bool isLessKey(const key_type& a, key_type& b) const {
+			return (key_comp()(a,b));
+		}
+		bool isLessKey(const key_type& a,const key_type& b) const {
+			return (key_comp()(a,b));
+		}
+		bool isBiggerKey(key_type& a, key_type& b) {
+			return (key_comp()(b,a));
+		}
+		bool isBiggerKey(const key_type& a, key_type& b) const {
+			return (key_comp()(b,a));
+		}
+		bool isBiggerKey(key_type& a,const key_type& b) const {
+			return (key_comp()(b,a));
+		}
+		bool isBiggerKey(const key_type& a,const key_type& b) const {
+			return (key_comp()(b,a));
+		}
     };
 
     template <class Key, class T, class Compare, class Allocator>

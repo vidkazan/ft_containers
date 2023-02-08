@@ -9,18 +9,18 @@ namespace ft {
     template<typename T, typename Alloc = std::allocator<T> >
     class vector {
     public:
-        typedef T value_type;
-        typedef Alloc allocator_type;
-        typedef typename allocator_type::reference reference;
-        typedef typename allocator_type::const_reference const_reference;
-        typedef typename allocator_type::pointer pointer;
-        typedef typename allocator_type::const_pointer const_pointer;
-        typedef typename ft::random_access_iterator<value_type> iterator;
-        typedef typename ft::const_random_access_iterator<value_type> const_iterator;
-        typedef typename ft::reverse_iterator<iterator> reverse_iterator;
-        typedef typename ft::reverse_iterator<const_iterator> const_reverse_iterator;
-        typedef typename iterator_traits<iterator>::difference_type difference_type;
-        typedef typename allocator_type::size_type size_type;
+        typedef 			T 												value_type;
+        typedef 			Alloc 											allocator_type;
+        typedef typename 	allocator_type::reference						reference;
+        typedef typename 	allocator_type::const_reference					const_reference;
+        typedef typename 	allocator_type::pointer 						pointer;
+        typedef typename 	allocator_type::const_pointer 					const_pointer;
+        typedef typename 	ft::random_access_iterator<value_type> 			iterator;
+        typedef typename 	ft::const_random_access_iterator<value_type> 	const_iterator;
+        typedef typename 	ft::reverse_iterator<iterator>					reverse_iterator;
+        typedef typename 	ft::reverse_iterator<const_iterator>			const_reverse_iterator;
+        typedef typename 	iterator_traits<iterator>::difference_type		difference_type;
+        typedef typename 	allocator_type::size_type size_type;
 
         explicit vector(const allocator_type &alloc = allocator_type());
         explicit vector(
@@ -76,6 +76,8 @@ namespace ft {
         void            resize(size_type n, value_type val = value_type());
         size_type       size() const;
         void            swap(vector &x);
+		value_type*			data(void);
+		const value_type*	data(void) const;
     private:
 
         allocator_type _alloc;
@@ -171,13 +173,13 @@ namespace ft {
     template<class T, class Alloc>
     vector<T, Alloc>::~vector()
     {
-		std::cout
-			<< "\n====================================================\n"
-			<< "obj " << this << "\n"
-			<< "alloc " << &_alloc << "\n"
-			<< "vector: " << _vector << "\n"
-				<< "vector[0]: " << &_vector[0] << "\n"
-			<< "Clearing...\n";
+//		std::cout
+//			<< "\n====================================================\n"
+//			<< "obj " << this << "\n"
+//			<< "alloc " << &_alloc << "\n"
+//			<< "vector: " << _vector << "\n"
+//				<< "vector[0]: " << &_vector[0] << "\n"
+//			<< "Clearing...\n";
         this->clear();
         _alloc.deallocate(_vector, _capacity);
     }
@@ -345,15 +347,21 @@ namespace ft {
     typename vector<T, Alloc>::size_type
     vector<T, Alloc>::capacity() const{return _capacity;}
 
-    template<typename T, typename Alloc>
-    void
-    vector<T, Alloc>::clear()
-    {
-        for(size_type i=0;i<_size;i++){
-            _alloc.destroy(&_vector[i]);
-        }
-        _size = 0;
-    }
+
+	template <typename T, typename Allocator>
+	void vector<T, Allocator>::clear(void)
+	{
+		size_type old_size = size();
+		vector<T,Allocator>::pointer p = this->end().base();
+
+		for(size_type i = 0; i < old_size; i++)
+		{
+			p--;
+			_size--;
+			_alloc.destroy(p);
+		}
+		_size = 0;
+	}
 
     template<typename T, typename Alloc>
     bool
@@ -422,7 +430,7 @@ namespace ft {
     {
 
         size_type n = last - first;
-        std::cout << "          insert range: ";
+//        std::cout << "          insert range: ";
         if ((_capacity - _size) >= n)
         {
             std::cout << "without relocate\n";
@@ -438,7 +446,7 @@ namespace ft {
         }
         else
         {
-            std::cout << "with! relocate\n";
+//            std::cout << "with! relocate\n";
             size_type n_cap = 1;
             if (_capacity)
                 n_cap = _capacity * 2;
@@ -636,6 +644,13 @@ namespace ft {
         _vector = newVector;
         _capacity = n;
     }
+	template <typename T, typename Allocator>
+	typename vector<T, Allocator>::value_type* vector<T, Allocator>::data()
+	{return (_vector);}
+
+	template <typename T, typename Allocator>
+	const typename vector<T, Allocator>::value_type* vector<T, Allocator>::data() const
+	{return (_vector);}
 }
 
 
