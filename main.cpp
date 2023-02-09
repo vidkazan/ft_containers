@@ -6,6 +6,8 @@
 
 int main(int argc, char** argv)
 {
+	argc = 0;
+	argv = NULL;
 	std::ostringstream	ss;
 	ft::map<int, int>	mp;
 
