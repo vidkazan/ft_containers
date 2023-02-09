@@ -40,12 +40,10 @@ namespace ft
 		reference				operator[](difference_type n)	const	{return *(_i + n);};
 	};
 
-	//////LOGICAL OPERATORS
 	template<typename Iter1, typename Iter2>
 	bool operator==(const random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() == rhs.base());}
 
-	//comparing with const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator==(const random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() == rhs.base());}
@@ -54,7 +52,6 @@ namespace ft
 	bool operator<(const random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() < rhs.base());}
 
-	//comparing with const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator<(const random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() < rhs.base());}
@@ -63,7 +60,6 @@ namespace ft
 	bool operator!=(const random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() != rhs.base());}
 
-	//comparing with const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator!=(const random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() != rhs.base());}
@@ -72,7 +68,6 @@ namespace ft
 	bool operator>(const random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() > rhs.base());}
 
-	//comparing with const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator>(const random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() > rhs.base());}
@@ -81,7 +76,6 @@ namespace ft
 	bool operator>=(const random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() >= rhs.base());}
 
-	//comparing with const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator>=(const random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() >= rhs.base());}
@@ -90,7 +84,6 @@ namespace ft
 	bool operator<=(const random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() <= rhs.base());}
 
-	//comparing with const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator<=(const random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() <= rhs.base());}
@@ -111,12 +104,6 @@ namespace ft
 	ft::random_access_iterator<int>::difference_type operator-(const random_access_iterator<Iter1>& _x, const const_random_access_iterator<Iter1>& _y)
 		{return (_x.base() - _y.base());}
 
-	/*
-		CONSTANT ITERATOR - same but with value_type as a const. Lets me assign a non-const iterator to a const one
-		In the original implementation their is a wrapper template class - does not work for my implementation
-		typedef __wrap_iter<pointer>                     iterator;
-		typedef __wrap_iter<const_pointer>               const_iterator;
-	*/
 	template<typename T>
 	class const_random_access_iterator : public ft::iterator<random_access_iterator_tag, T>
 	{
@@ -156,7 +143,6 @@ namespace ft
 	bool operator==(const const_random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() == rhs.base());}
 
-	//comparing with non-const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator==(const const_random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() == rhs.base());}
@@ -165,7 +151,6 @@ namespace ft
 	bool operator<(const const_random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() < rhs.base());}
 
-	//comparing with non-const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator<(const const_random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() < rhs.base());}
@@ -174,7 +159,6 @@ namespace ft
 	bool operator!=(const const_random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() != rhs.base());}
 
-	//comparing with non-const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator!=(const const_random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() != rhs.base());}
@@ -183,7 +167,6 @@ namespace ft
 	bool operator>(const const_random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() > rhs.base());}
 
-	//comparing with non-const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator>(const const_random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() > rhs.base());}
@@ -192,7 +175,6 @@ namespace ft
 	bool operator>=(const const_random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() >= rhs.base());}
 
-	//comparing with non-const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator>=(const const_random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() >= rhs.base());}
@@ -201,7 +183,6 @@ namespace ft
 	bool operator<=(const const_random_access_iterator<Iter1> &lhs, const const_random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() <= rhs.base());}
 
-	//comparing with non-const iterators
 	template<typename Iter1, typename Iter2>
 	bool operator<=(const const_random_access_iterator<Iter1> &lhs, const random_access_iterator<Iter2>  &rhs)
 		{return (lhs.base() <= rhs.base());}

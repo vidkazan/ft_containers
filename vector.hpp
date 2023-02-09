@@ -80,10 +80,10 @@ namespace ft {
 		const value_type*	data(void) const;
     private:
 
-        allocator_type _alloc;
-        size_type _capacity;
-        pointer _vector;
-        size_type _size;
+        allocator_type	_alloc;
+        size_type		_capacity;
+        pointer 		_vector;
+        size_type		_size;
 
         void            reallocateWithNewAssign(size_type n, value_type val);
         void            reallocateWithoutNewAssign(size_type n);

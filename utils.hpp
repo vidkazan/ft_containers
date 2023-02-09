@@ -44,13 +44,9 @@ namespace ft
     template <> struct is_integral<unsigned long long int> : true_type {};
 
     template<class InputIt1, class InputIt2>
-    bool equal( InputIt1 first1, InputIt1 last1,
-                InputIt2 first2)
-    {
-        for (; first1 != last1; ++first1, ++first2)
-        {
-            if (*first1 != *first2)
-            {
+    bool equal( InputIt1 first1, InputIt1 last1,InputIt2 first2) {
+        for (; first1 != last1; ++first1, ++first2) {
+            if (*first1 != *first2) {
                 return false;
             }
         }
@@ -58,23 +54,19 @@ namespace ft
     }
 
     template< class InputIt1, class InputIt2 >
-    bool lexicographical_compare(	InputIt1 first1, InputIt1 last1,
-                                     InputIt2 first2, InputIt2 last2 )
-    {
-        for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2)
-        {
+    bool lexicographical_compare(	InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2 ) {
+        for ( ; (first1 != last1) && (first2 != last2); ++first1, (void) ++first2) {
             if (*first1 < *first2)
                 return true;
             if (*first2 < *first1)
                 return false;
         }
         return (first1 == last1) && (first2 != last2);
-    };
+    }
 }
 
 namespace ft
 {
-    // Iterator traits
     template <class Iterator>
     struct iterator_traits {
         typedef typename Iterator::pointer           pointer;
@@ -100,7 +92,6 @@ namespace ft
         typedef std::random_access_iterator_tag iterator_category;
     };
 
-    // Iterator
     template <typename Category, typename T>
     struct iterator {
         typedef T*              pointer;
@@ -114,35 +105,31 @@ namespace ft
     struct forward_iterator_tag : public input_iterator_tag { };
     struct bidirectional_iterator_tag : public forward_iterator_tag { };
     struct random_access_iterator_tag : public bidirectional_iterator_tag { };
+
     enum node_color{
         NODE_COLOR_BLACK,
         NODE_COLOR_RED,
     };
 
     template <typename T>
-    struct is_pointer
-    {
+    struct is_pointer {
         static const bool value = false;
     };
     template <typename T>
-    struct is_pointer<T *>
-    {
+    struct is_pointer<T *> {
         static const bool value = true;
     };
     template <typename T>
-    struct is_void
-    {
+    struct is_void {
         static const bool value = false;
     };
     template <>
-    struct is_void<void>
-    {
+    struct is_void<void> {
         static const bool value = true;
     };
 
     template <class T>
-    void swap (T & a, T & b)
-    {
+    void swap (T & a, T & b) {
         T	tmp(a);
         a = b;
         b = tmp;
