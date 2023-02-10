@@ -171,15 +171,7 @@ namespace ft {
     }
 
     template<class T, class Alloc>
-    vector<T, Alloc>::~vector()
-    {
-//		std::cout
-//			<< "\n====================================================\n"
-//			<< "obj " << this << "\n"
-//			<< "alloc " << &_alloc << "\n"
-//			<< "vector: " << _vector << "\n"
-//				<< "vector[0]: " << &_vector[0] << "\n"
-//			<< "Clearing...\n";
+    vector<T, Alloc>::~vector() {
         this->clear();
         _alloc.deallocate(_vector, _capacity);
     }
@@ -421,7 +413,6 @@ namespace ft {
             mv_source++;
         }
         _size += n;
-    //            std::cout << "/\n";
     }
 
     template<typename T, typename Alloc>
@@ -430,10 +421,9 @@ namespace ft {
     {
 
         size_type n = last - first;
-//        std::cout << "          insert range: ";
+
         if ((_capacity - _size) >= n)
         {
-            std::cout << "without relocate\n";
             for (size_type i = 0; i < (size() - (&(*position) - _vector)); i++)
                 _alloc.construct(this->end().base() - i + n - 1, *(this->end() - i - 1));
             while (first != last)
@@ -443,10 +433,7 @@ namespace ft {
                 position++;
             }
             _size +=n;
-        }
-        else
-        {
-//            std::cout << "with! relocate\n";
+        } else {
             size_type n_cap = 1;
             if (_capacity)
                 n_cap = _capacity * 2;

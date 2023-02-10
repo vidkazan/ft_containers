@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <typeinfo>
 
-
 namespace ft
 {
     template <class T1, class T2>
@@ -10,10 +9,12 @@ namespace ft
         typedef			T1			first_type;
         typedef			T2			second_type;
 
-        pair		(void)											: first(first_type()), second(second_type()) {}
+        pair()												: first(first_type()), second(second_type()){}
+
         template <class U, class V>
-        pair		(const pair<U,V> & pr)							: first(pr.first), second(pr.second) {}
-        pair		(const first_type & a, const second_type & b)	: first(a), second(b) {}
+        pair(const pair<U,V>& pr)					: first(pr.first), second(pr.second){}
+
+        pair(const first_type & a, const second_type & b)	: first(a), second(b){}
 
         first_type		first;
         second_type		second;

@@ -1,30 +1,40 @@
 NAME = ft_containers
+CC = c++
+SEED = "12345"
 
-SRCS =	map_red_black_tree.cpp
+FLAGS = -Wall -Werror -Wextra
 
-HDRS = vector.hpp utils.hpp vector_iterator.hpp
+all:	main
 
-OBJS = $(SRCS:.cpp=.o)
+vector_tests:	test_vector_capacity \
+				test_vector_construction \
+				test_vector_element_access \
+				test_vector_iter_methods \
+				test_vector_modifiers \
+				test_vector_non_member_swap \
+				test_vector_logical_operators
 
-FLAGS = -O3 -std=c++98
+set_tests:		test_set_construction \
+				test_set_iterators \
+				test_set_capacity \
+				test_set_lookup \
+				test_set_modifiers \
+				test_set_observers \
+				test_set_logical_operators
 
-COMP = clang++
+stack_tests:		test_stack
 
-%.o: %.cpp		$(HDRS)
-				@$(COMP) $(FLAGS) -c $< -o $@
-
-all:			$(NAME)
-
-$(NAME):		$(OBJS)
-				@$(COMP) $(FLAGS) $(OBJS) -o $@
+main:
+	@echo seed: $(SEED)
+	@$(CC) main_ft.cpp -o $(NAME) $(FLAGS) &&  ./$(NAME) $(SEED) > res_ft
+	@cat res_ft
+	@$(CC) main_std.cpp -o $(NAME) $(FLAGS) &&  ./$(NAME) $(SEED) > res_std
+	@cat res_std
 
 clean:
-				@rm -f $(OBJS)
+	@rm -rf $(NAME)
+	@rm -f res_ft res_std
 
-fclean:			clean
-				@rm -f $(NAME)
+fclean: clean
 
-re:				fclean all
-
-
-.PHONY:			all clean fclean re
+re: clean
