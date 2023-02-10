@@ -64,10 +64,7 @@ namespace ft
         }
         return (first1 == last1) && (first2 != last2);
     }
-}
 
-namespace ft
-{
     template <class Iterator>
     struct iterator_traits {
         typedef typename Iterator::pointer           pointer;

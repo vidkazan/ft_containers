@@ -33,17 +33,6 @@ namespace ft {
 			typedef             node_type*                                              node_pointer;
 			typedef typename    allocator_type::template rebind<ft::node<value_type> >::other	node_allocator_type;
 
-//			class               value_compare : std::binary_function<value_type, value_type, bool> {
-//					friend class set;
-//				public:
-//					bool operator()(const value_type &lhs, const value_type &rhs) const {
-//						return _comp(lhs, rhs);
-//					}
-//				protected:
-//					key_compare _comp;
-//					value_compare(key_compare comp) : _comp(comp) {}
-//			};
-
 			explicit				set(
 										const key_compare &comp = key_compare(),
 										const allocator_type &alloc = allocator_type()
