@@ -1,5 +1,5 @@
 # ft_containers
-Ecole 42 C++ project with implementation of: 
+Ecole 42 C++ project with implementation standart C++ containers: 
 - std::vector 
 - std::map
 - std::set
